@@ -10,10 +10,27 @@
     <nav>
         <a href="/">Início</a>
         <a href="/produtos">Produtos</a>
-        <a href="/auth/login">Login</a>
+
+        {% if current_user.is_authenticated %}
+        <span>Olá, {{ current_user.email }}</span>
+        <a href="{{ url_for('auth.logout') }}">Sair</a>
+        {% else %}
+        <a href="{{ url_for('auth.login') }}">Login</a>
+        <a href="{{ url_for('auth.registro') }}">Criar Conta</a>
+        {% endif %}
     </nav>
 
     <div class="container">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class="flashes">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+
         {% block conteudo %}{% endblock %}
     </div>
 </body>
