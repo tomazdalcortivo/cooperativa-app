@@ -1,31 +1,44 @@
 {% extends "base.html" %}
 
 {% block conteudo %}
-    <h2>Painel do Produtor - Olá, {{ current_user.produtor.nome }}!</h2>
-    
-    <p>Aqui você pode gerenciar suas informações e produtos.</p>
+<div class="produtor-profile">
+    <h2>Gerenciar Perfil</h2>
+    <p>Atualize suas informações de contato e endereço.</p>
 
-    <div class="produtor-actions">
-        <a href="{{ url_for('produtos.novo_produto') }}" class="btn-action">Cadastrar Novo Produto</a>
-        <a href="{{ url_for('produtor.perfil') }}" class="btn-action">Gerenciar Perfil</a>
-    </div>
+    <form method="POST">
 
-    <hr>
+        <div style="margin-bottom: 15px;">
+            <label>Nome Completo:</label>
+            <input type="text" name="nome" value="{{ perfil.nome or '' }}" required style="width: 100%; padding: 8px;">
+        </div>
 
-    <h3>Meus Produtos ({{ meus_produtos|length }})</h3>
-    {% if meus_produtos %}
-        <ul class="lista-produtos">
-            {% for p in meus_produtos %}
-            <li>
-                <strong>{{ p.nome }}</strong> 
-                - R$ {{ "%.2f"|format(p.preco) }} / {{ p.unidade }} 
-                (Estoque: {{ p.estoque }})
-                <a href="{{ url_for('produtos.editar_produto', id=p.id) }}" style="margin-left: 15px;">[Editar]</a>
-            </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>Você ainda não tem produtos cadastrados. <a href="{{ url_for('produtos.novo_produto') }}">Comece agora!</a></p>
-    {% endif %}
+        <div style="margin-bottom: 15px;">
+            <label>CPF:</label>
+            <input type="text" name="cpf" value="{{ perfil.cpf or '' }}" style="width: 100%; padding: 8px;">
+        </div>
 
-    {% endblock %}
+        <div style="margin-bottom: 15px;">
+            <label>Telefone:</label>
+            <input type="text" name="telefone" value="{{ perfil.telefone or '' }}" style="width: 100%; padding: 8px;">
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label>Endereço da Propriedade:</label><br>
+            <textarea name="endereco" rows="3" style="width: 100%; padding: 8px;">{{ perfil.endereco or '' }}</textarea>
+        </div>
+
+        <div style="margin-bottom: 15px;">
+            <label>Certificações (Orgânico, etc):</label><br>
+            <textarea name="certificacoes" rows="3"
+                style="width: 100%; padding: 8px;">{{ perfil.certificacoes or '' }}</textarea>
+        </div>
+
+        <button type="submit"
+            style="padding: 10px 20px; background-color: #28a745; color: white; border: none; cursor: pointer;">
+            Salvar Alterações
+        </button>
+
+        <a href="{{ url_for('produtor.painel') }}" style="margin-left: 15px;">Voltar ao Painel</a>
+    </form>
+</div>
+{% endblock %}
