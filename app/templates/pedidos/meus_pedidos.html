@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+<h2>Meus Pedidos</h2>
+
+{% if pedidos %}
+{% for p in pedidos %}
+<div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 15px; border-radius: 5px;">
+    <div style="display: flex; justify-content: space-between; background: #eee; padding: 5px;">
+        <strong>Pedido #{{ p.id }}</strong>
+        <span>Data: {{ p.data.strftime('%d/%m/%Y') }}</span>
+        <span style="color: blue;">{{ p.status }}</span>
+    </div>
+    <div style="padding: 10px;">
+        <ul>
+            {% for item in p.itens %}
+            <li>{{ item.quantidade }}x {{ item.produto.nome }} (R$ {{ item.preco_unitario }})</li>
+            {% endfor %}
+        </ul>
+        <p><strong>Total: R$ {{ "%.2f"|format(p.total) }}</strong> | Pagamento: {{ p.forma_pagamento }}</p>
+    </div>
+</div>
+{% endfor %}
+{% else %}
+<p>Você ainda não fez nenhum pedido.</p>
+{% endif %}
+{% endblock %}

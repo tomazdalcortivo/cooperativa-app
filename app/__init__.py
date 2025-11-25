@@ -24,11 +24,13 @@ def create_app():
     from .blueprints.produtos.routes import produtos_bp
     from .blueprints.admin.routes import admin_bp
     from .blueprints.produtores.routes import produtor_bp
+    from .blueprints.pedidos.routes import pedidos_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(produtos_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(produtor_bp)
+    app.register_blueprint(pedidos_bp)
 
 
     from flask import render_template

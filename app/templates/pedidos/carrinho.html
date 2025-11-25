@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+<h2>Seu Carrinho</h2>
+
+{% if itens %}
+<table style="width:100%; border-collapse: collapse; margin-bottom: 20px;">
+    <thead>
+        <tr style="border-bottom: 2px solid #ddd; text-align: left;">
+            <th>Produto</th>
+            <th>Preço</th>
+            <th>Qtd</th>
+            <th>Subtotal</th>
+            <th>Ação</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in itens %}
+        <tr style="border-bottom: 1px solid #eee;">
+            <td style="padding: 10px;">{{ item.produto.nome }}</td>
+            <td>R$ {{ "%.2f"|format(item.produto.preco) }}</td>
+            <td>{{ item.quantidade }}</td>
+            <td>R$ {{ "%.2f"|format(item.subtotal) }}</td>
+            <td><a href="{{ url_for('pedidos.remover_do_carrinho', produto_id=item.produto.id) }}"
+                    style="color: red;">Remover</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div style="text-align: right; margin-top: 20px;">
+    <h3>Total: R$ {{ "%.2f"|format(total) }}</h3>
+    <a href="{{ url_for('produtos.listar_produtos') }}" class="btn">Continuar Comprando</a>
+    <a href="{{ url_for('pedidos.checkout') }}" class="btn" style="background-color: green; color: white;">Finalizar
+        Compra</a>
+</div>
+{% else %}
+<p>Seu carrinho está vazio.</p>
+<a href="{{ url_for('produtos.listar_produtos') }}">Ir para Produtos</a>
+{% endif %}
+{% endblock %}

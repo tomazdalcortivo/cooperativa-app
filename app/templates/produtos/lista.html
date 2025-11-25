@@ -1,46 +1,65 @@
 {% extends "base.html" %}
 
 {% block conteudo %}
-<div style="display: flex; justify-content: space-between; align-items: center;">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
     <h2>Catálogo de Produtos</h2>
 
     {% if current_user.is_authenticated and current_user.tipo_usuario == 'produtor' %}
-    <a href="{{ url_for('produtos.novo_produto') }}" class="btn-primary"
-        style="background:green; color:white; padding:5px 10px; text-decoration:none;">
+    <a href="{{ url_for('produtos.novo_produto') }}" class="btn"
+        style="background:green; color:white; padding:8px 15px; text-decoration:none; border-radius: 4px;">
         + Novo Produto
     </a>
     {% endif %}
 </div>
 
 {% if produtos %}
-<ul style="list-style: none; padding: 0;">
+<div class="grid-produtos"
+    style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
     {% for p in produtos %}
-    <li style="border: 1px solid #ddd; margin-bottom: 10px; padding: 10px; border-radius: 5px;">
-        <div style="display: flex; justify-content: space-between;">
-            <div>
-                <strong>{{ p.nome }}</strong>
-                <span style="color: #666; font-size: 0.9em;">({{ p.categoria.nome }})</span>
-                <br>
-                Preço: R$ {{ "%.2f"|format(p.preco) }} / {{ p.unidade }}
-                <br>
-                <small>Produtor: {{ p.produtor.nome }} | Estoque: {{ p.estoque }}</small>
-            </div>
+    <div class="card-produto"
+        style="border: 1px solid #ddd; padding: 15px; border-radius: 8px; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+
+        <h3 style="margin-top: 0; color: #2c3e50;">{{ p.nome }}</h3>
+        <p style="color: #7f8c8d; font-size: 0.9em;">{{ p.categoria.nome }}</p>
+
+        <p style="font-size: 1.2em; font-weight: bold; color: #27ae60;">
+            R$ {{ "%.2f"|format(p.preco) }} <small style="color: #666; font-weight: normal;">/ {{ p.unidade }}</small>
+        </p>
+
+        <p style="font-size: 0.85em;">
+            <strong>Produtor:</strong> {{ p.produtor.nome }}<br>
+            <strong>Estoque:</strong> {{ p.estoque }} disponível
+        </p>
+
+        <div class="acoes" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee;">
+
+            {% if p.estoque > 0 %}
+            <form action="{{ url_for('pedidos.adicionar_ao_carrinho', produto_id=p.id) }}" method="POST"
+                style="display: flex; gap: 5px;">
+                <input type="number" name="quantidade" value="1" min="1" max="{{ p.estoque }}"
+                    style="width: 60px; padding: 5px;">
+                <button type="submit"
+                    style="background: #3498db; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; flex: 1;">
+                    Comprar
+                </button>
+            </form>
+            {% else %}
+            <span style="color: red; font-weight: bold;">Esgotado</span>
+            {% endif %}
 
             {% if current_user.is_authenticated and (current_user.tipo_usuario == 'admin' or (current_user.produtor and
             current_user.produtor.id == p.produtor_id)) %}
-            <div>
-                <a href="{{ url_for('produtos.editar_produto', id=p.id) }}"
-                    style="color: blue; margin-right: 10px;">Editar</a>
+            <div style="margin-top: 10px; font-size: 0.9em; text-align: right;">
+                <a href="{{ url_for('produtos.editar_produto', id=p.id) }}" style="color: blue;">Editar</a> |
                 <a href="{{ url_for('produtos.deletar_produto', id=p.id) }}" style="color: red;"
-                    onclick="return confirm('Tem certeza que deseja excluir?');">Excluir</a>
+                    onclick="return confirm('Excluir este produto?');">Excluir</a>
             </div>
             {% endif %}
         </div>
-    </li>
+    </div>
     {% endfor %}
-</ul>
+</div>
 {% else %}
-<p>Nenhum produto cadastrado ainda.</p>
+<p>Nenhum produto cadastrado no momento.</p>
 {% endif %}
-
 {% endblock %}
