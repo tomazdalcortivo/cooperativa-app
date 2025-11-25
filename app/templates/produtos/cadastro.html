@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+<h2>{{ 'Editar Produto' if produto else 'Novo Produto' }}</h2>
+
+<form method="POST">
+    <label>Nome do Produto:</label>
+    <input type="text" name="nome" value="{{ produto.nome if produto else '' }}" required>
+    <br><br>
+
+    <label>Categoria:</label>
+    <select name="categoria" required>
+        {% for c in categorias %}
+        <option value="{{ c.id }}" {% if produto and produto.categoria_id==c.id %}selected{% endif %}>
+            {{ c.nome }}
+        </option>
+        {% endfor %}
+    </select>
+    <br><br>
+
+    <label>Preço (R$):</label>
+    <input type="text" name="preco" value="{{ produto.preco if produto else '' }}" placeholder="Ex: 10.50" required>
+    <br><br>
+
+    <label>Unidade:</label>
+    <select name="unidade">
+        <option value="un" {% if produto and produto.unidade=='un' %}selected{% endif %}>Unidade (un)</option>
+        <option value="kg" {% if produto and produto.unidade=='kg' %}selected{% endif %}>Quilo (kg)</option>
+        <option value="L" {% if produto and produto.unidade=='L' %}selected{% endif %}>Litro (L)</option>
+        <option value="dz" {% if produto and produto.unidade=='dz' %}selected{% endif %}>Dúzia (dz)</option>
+    </select>
+    <br><br>
+
+    <label>Estoque Atual:</label>
+    <input type="number" name="estoque" value="{{ produto.estoque if produto else 0 }}" required>
+    <br><br>
+
+    <label>Descrição:</label><br>
+    <textarea name="descricao" rows="4" cols="50">{{ produto.descricao if produto else '' }}</textarea>
+    <br><br>
+
+    <button type="submit">{{ 'Salvar Alterações' if produto else 'Cadastrar Produto' }}</button>
+    <a href="{{ url_for('produtos.listar_produtos') }}">Cancelar</a>
+</form>
+{% endblock %}
