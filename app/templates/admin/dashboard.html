@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+<div class="admin-dashboard">
+    <h2>Painel Administrativo</h2>
+
+    <div class="stats-container" style="display: flex; gap: 20px; margin-bottom: 30px;">
+        <div class="card" style="border: 1px solid #ccc; padding: 15px; border-radius: 8px; flex: 1;">
+            <h3>Utilizadores</h3>
+            <p style="font-size: 2em; font-weight: bold;">{{ total_usuarios }}</p>
+            <a href="{{ url_for('admin.gerenciar_usuarios') }}">Ver todos</a>
+        </div>
+
+        <div class="card" style="border: 1px solid #ccc; padding: 15px; border-radius: 8px; flex: 1;">
+            <h3>Pedidos Pendentes</h3>
+            <p style="font-size: 2em; font-weight: bold; color: orange;">{{ pedidos_pendentes }}</p>
+            <span>Ação necessária</span>
+        </div>
+
+        <div class="card" style="border: 1px solid #ccc; padding: 15px; border-radius: 8px; flex: 1;">
+            <h3>Produtos</h3>
+            <p style="font-size: 2em; font-weight: bold;">{{ total_produtos }}</p>
+            <a href="{{ url_for('produtos.listar_produtos') }}">Ver catálogo</a>
+        </div>
+    </div>
+
+    <h3>Ações Rápidas</h3>
+    <ul>
+        <li><a href="{{ url_for('admin.gerenciar_usuarios') }}">Gerir Utilizadores (Aprovar/Bloquear)</a></li>
+    </ul>
+</div>
+{% endblock %}

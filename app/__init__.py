@@ -22,9 +22,11 @@ def create_app():
 
     from .blueprints.auth.routes import auth_bp
     from .blueprints.produtos.routes import produtos_bp
-    
+    from .blueprints.admin.routes import admin_bp
+
     app.register_blueprint(auth_bp)
     app.register_blueprint(produtos_bp)
+    app.register_blueprint(admin_bp)
 
     from flask import render_template
     @app.route("/")
