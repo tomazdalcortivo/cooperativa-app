@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
 from app import db
-from app.models.models import Produto, Produtor
+from app.models.models import Produto, Produtor, ItemPedido, Pedido 
 from functools import wraps
 
 produtor_bp = Blueprint("produtor", __name__, url_prefix="/produtor")
@@ -25,9 +25,16 @@ def produtor_required(f):
 @produtor_required
 def painel():
     meus_produtos = Produto.query.filter_by(produtor_id=current_user.produtor.id).all()
-    # Futuramente: Aqui listaremos pedidos pendentes para este produtor
     
-    return render_template("produtores/painel.html", meus_produtos=meus_produtos)
+    # 2. Minhas Vendas (Itens de pedidos que contêm meus produtos)
+    # Fazemos um join para pegar apenas itens dos produtos deste produtor
+    minhas_vendas = db.session.query(ItemPedido).join(Produto).filter(
+        Produto.produtor_id == current_user.produtor.id
+    ).order_by(ItemPedido.id.desc()).all()
+    
+    return render_template("produtores/painel.html", 
+                         meus_produtos=meus_produtos, 
+                         minhas_vendas=minhas_vendas)
 
 @produtor_bp.route("/perfil", methods=["GET", "POST"])
 @login_required

@@ -24,4 +24,54 @@
 {% else %}
 <p>Você ainda não tem produtos.</p>
 {% endif %}
+
+<hr style="margin: 30px 0;">
+
+<h3>📦 Minhas Vendas Recebidas</h3>
+
+{% if minhas_vendas %}
+<table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+    <thead>
+        <tr style="background: #f8f9fa; text-align: left;">
+            <th style="padding: 10px; border: 1px solid #ddd;">Data</th>
+            <th style="padding: 10px; border: 1px solid #ddd;">Produto</th>
+            <th style="padding: 10px; border: 1px solid #ddd;">Qtd</th>
+            <th style="padding: 10px; border: 1px solid #ddd;">Valor Total</th>
+            <th style="padding: 10px; border: 1px solid #ddd;">Comprador</th>
+            <th style="padding: 10px; border: 1px solid #ddd;">Status Pedido</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in minhas_vendas %}
+        <tr>
+            <td style="padding: 10px; border: 1px solid #ddd;">
+                {{ item.pedido.data.strftime('%d/%m/%Y') }}
+            </td>
+            <td style="padding: 10px; border: 1px solid #ddd;">
+                {{ item.produto.nome }}
+            </td>
+            <td style="padding: 10px; border: 1px solid #ddd;">
+                {{ item.quantidade }} {{ item.produto.unidade }}
+            </td>
+            <td style="padding: 10px; border: 1px solid #ddd; color: green;">
+                R$ {{ "%.2f"|format(item.preco_unitario * item.quantidade) }}
+            </td>
+            <td style="padding: 10px; border: 1px solid #ddd;">
+                {{ item.pedido.cliente.nome }}<br>
+                <small>{{ item.pedido.cliente.telefone or 'Sem telefone' }}</small>
+            </td>
+            <td style="padding: 10px; border: 1px solid #ddd;">
+                <span style="background: #eee; padding: 2px 6px; border-radius: 4px; font-size: 0.9em;">
+                    {{ item.pedido.status }}
+                </span>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p style="background: #fff3cd; padding: 15px; border-radius: 5px;">
+    Nenhuma venda realizada ainda.
+</p>
+{% endif %}
 {% endblock %}
