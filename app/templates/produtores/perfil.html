@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+    <h2>Painel do Produtor - Olá, {{ current_user.produtor.nome }}!</h2>
+    
+    <p>Aqui você pode gerenciar suas informações e produtos.</p>
+
+    <div class="produtor-actions">
+        <a href="{{ url_for('produtos.novo_produto') }}" class="btn-action">Cadastrar Novo Produto</a>
+        <a href="{{ url_for('produtor.perfil') }}" class="btn-action">Gerenciar Perfil</a>
+    </div>
+
+    <hr>
+
+    <h3>Meus Produtos ({{ meus_produtos|length }})</h3>
+    {% if meus_produtos %}
+        <ul class="lista-produtos">
+            {% for p in meus_produtos %}
+            <li>
+                <strong>{{ p.nome }}</strong> 
+                - R$ {{ "%.2f"|format(p.preco) }} / {{ p.unidade }} 
+                (Estoque: {{ p.estoque }})
+                <a href="{{ url_for('produtos.editar_produto', id=p.id) }}" style="margin-left: 15px;">[Editar]</a>
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Você ainda não tem produtos cadastrados. <a href="{{ url_for('produtos.novo_produto') }}">Comece agora!</a></p>
+    {% endif %}
+
+    {% endblock %}

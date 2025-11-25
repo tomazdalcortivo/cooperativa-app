@@ -9,9 +9,17 @@
 <body>
     <nav>
         <a href="/">Início</a>
-        <a href="/produtos">Produtos</a>
+        <a href="{{ url_for('produtos.listar_produtos') }}">Produtos</a>
 
         {% if current_user.is_authenticated %}
+        {% if current_user.tipo_usuario == 'produtor' %}
+        <a href="{{ url_for('produtor.painel') }}" style="color: yellow; font-weight: bold;">Área do Produtor</a>
+        {% endif %}
+
+        {% if current_user.tipo_usuario == 'admin' %}
+        <a href="{{ url_for('admin.dashboard') }}" style="color: orange; font-weight: bold;">Admin</a>
+        {% endif %}
+
         <span>Olá, {{ current_user.email }}</span>
         <a href="{{ url_for('auth.logout') }}">Sair</a>
         {% else %}
