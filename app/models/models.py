@@ -21,6 +21,10 @@ class Usuario(db.Model, UserMixin):
     produtor = db.relationship("Produtor", backref="usuario", uselist=False)
     cliente = db.relationship("Cliente", backref="usuario", uselist=False)
 
+    @property
+    def is_active(self):
+        return self.ativo
+
 class Produtor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     usuario_id = db.Column(db.Integer, db.ForeignKey("usuario.id"), unique=True, nullable=False)

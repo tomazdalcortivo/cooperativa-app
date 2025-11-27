@@ -20,7 +20,13 @@
             <label for="senha">Senha:</label>
             <input type="password" id="senha" name="senha" required>
         </div>
-
+        <div class="campo">
+            <label>Eu quero ser:</label>
+            <select name="tipo_usuario" required style="width: 100%; padding: 8px;">
+                <option value="cliente">Cliente (Quero Comprar)</option>
+                <option value="produtor">Produtor (Quero Vender)</option>
+            </select>
+        </div>
         <button type="submit" class="btn-primary">Cadastrar</button>
     </form>
 

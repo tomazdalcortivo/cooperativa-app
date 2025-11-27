@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+<h2>Editar Usuário</h2>
+<p>ID: {{ usuario.id }} | Email: {{ usuario.email }}</p>
+
+<form method="POST">
+    <label>Tipo de Usuário:</label>
+    <select name="tipo_usuario">
+        <option value="cliente" {% if usuario.tipo_usuario=='cliente' %}selected{% endif %}>Cliente</option>
+        <option value="produtor" {% if usuario.tipo_usuario=='produtor' %}selected{% endif %}>Produtor</option>
+        <option value="admin" {% if usuario.tipo_usuario=='admin' %}selected{% endif %}>Admin</option>
+    </select>
+    <br><br>
+
+    <label>Status da Conta:</label>
+    <div style="padding: 10px; border: 1px solid #ccc;">
+        <input type="checkbox" name="ativo" {% if usuario.ativo %}checked{% endif %}>
+        Conta Ativa (Desmarque para bloquear)
+    </div>
+    <br><br>
+
+    <button type="submit">Salvar Alterações</button>
+    <a href="{{ url_for('admin.gerenciar_usuarios') }}">Cancelar</a>
+</form>
+{% endblock %}

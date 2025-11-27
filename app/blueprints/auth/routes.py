@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, request, flash, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, logout_user, login_required, current_user
 from app import db
-from app.models.models import Usuario, Cliente
+from app.models.models import Usuario, Cliente, Produtor
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/auth", template_folder="templates")
 
@@ -30,26 +30,36 @@ def registro():
         email = request.form.get("email")
         nome = request.form.get("nome")
         senha = request.form.get("senha")
-
+        tipo = request.form.get("tipo_usuario") 
+        
         if Usuario.query.filter_by(email=email).first():
             flash("Email já cadastrado.")
             return redirect(url_for('auth.registro'))
-
+        
         novo_usuario = Usuario(
             email=email,
             senha_hash=generate_password_hash(senha),
-            tipo_usuario='cliente'
+            tipo_usuario=tipo 
         )
         db.session.add(novo_usuario)
         db.session.commit()
-
-        novo_cliente = Cliente(usuario_id=novo_usuario.id, nome=nome)
-        db.session.add(novo_cliente)
+        
+        if tipo == 'produtor':
+            novo_produtor = Produtor(usuario_id=novo_usuario.id, nome=nome)
+            db.session.add(novo_produtor)
+        else:
+            novo_cliente = Cliente(usuario_id=novo_usuario.id, nome=nome)
+            db.session.add(novo_cliente)
+            
         db.session.commit()
-
+        
         login_user(novo_usuario)
-        return redirect(url_for('index'))
-
+        flash(f"Bem-vindo! Conta de {tipo} criada com sucesso.")
+        
+        if tipo == 'produtor':
+            return redirect(url_for('produtor.painel'))
+        return redirect(url_for('produtos.listar_produtos'))
+        
     return render_template("auth/registro.html")
 
 

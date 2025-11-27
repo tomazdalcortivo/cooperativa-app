@@ -20,14 +20,15 @@
             <td>{{ u.email }}</td>
             <td>
                 {% if u.tipo_usuario == 'admin' %}
-                    <strong>ADMIN</strong>
+                <strong>ADMIN</strong>
                 {% else %}
-                    {{ u.tipo_usuario }}
+                {{ u.tipo_usuario }}
                 {% endif %}
             </td>
             <td>{{ 'Ativo' if u.ativo else 'Bloqueado' }}</td>
             <td>
-                <a href="#">Editar</a> </td>
+                <a href="{{ url_for('admin.editar_usuario', id=u.id) }}">Editar</a>
+            </td>
         </tr>
         {% endfor %}
     </tbody>
