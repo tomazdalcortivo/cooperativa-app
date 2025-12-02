@@ -1,50 +1,95 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CoopVale</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <!-- Bootstrap CSS (CDN) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Optional icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-<body>
-    <nav>
-        <a href="/">Início</a>
-        <a href="{{ url_for('produtos.listar_produtos') }}">Produtos</a>
+<body class="bg-light text-dark">
 
-        {% if current_user.is_authenticated %}
-        {% if current_user.tipo_usuario == 'produtor' %}
-        <a href="{{ url_for('produtor.painel') }}" style="color: yellow; font-weight: bold;">Área do Produtor</a>
-        {% endif %}
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <div class="brand-leaf">🌿</div>
+                <span class="ms-2 fw-bold text-success">CoopVale</span>
+            </a>
 
-        {% if current_user.tipo_usuario == 'admin' %}
-        <a href="{{ url_for('admin.dashboard') }}" style="color: orange; font-weight: bold;">Admin</a>
-        {% endif %}
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+                aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-        {% if current_user.tipo_usuario == 'cliente' %}
-        <a href="{{ url_for('pedidos.ver_carrinho') }}">🛒 Carrinho</a>
-        {% endif %}
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="/">Início</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('produtos.listar_produtos') }}">Produtos</a>
+                    </li>
+                </ul>
 
-        <span>Olá, {{ current_user.email }}</span>
-        <a href="{{ url_for('auth.logout') }}">Sair</a>
-        {% else %}
-        <a href="{{ url_for('auth.login') }}">Login</a>
-        <a href="{{ url_for('auth.registro') }}">Criar Conta</a>
-        {% endif %}
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+                    {% if current_user.is_authenticated %}
+                    {% if current_user.tipo_usuario == 'produtor' %}
+                    <li class="nav-item"><a class="nav-link text-warning fw-semibold"
+                            href="{{ url_for('produtor.painel') }}">Área do Produtor</a></li>
+                    {% endif %}
+
+                    {% if current_user.tipo_usuario == 'admin' %}
+                    <li class="nav-item"><a clasçs="nav-link text-orange fw-semibold"
+                            href="{{ url_for('admin.dashboard') }}">Admin</a></li>
+                    {% endif %}
+
+                    {% if current_user.tipo_usuario == 'cliente' %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('pedidos.ver_carrinho') }}">
+                            <i class="bi bi-cart3"></i> Carrinho</a></li>
+                    {% endif %}
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userMenu" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">Olá, {{ current_user.email }}</a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+                            <li><a class="dropdown-item" href="#">Perfil</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Sair</a></li>
+                        </ul>
+                    </li>
+
+                    {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">Login</a></li>
+                    <li class="nav-item"><a class="nav-link btn btn-sm btn-success text-white ms-2"
+                            href="{{ url_for('auth.registro') }}">Criar Conta</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
     </nav>
 
-    <div class="container">
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <ul class="flashes">
-            {% for message in messages %}
-            <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        {% endwith %}
+    <main class="py-4">
+        <div class="container">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="alert alert-info">
+                <ul class="mb-0">
+                    {% for message in messages %}
+                    <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            {% endwith %}
 
-        {% block conteudo %}{% endblock %}
-    </div>
+            {% block conteudo %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- Bootstrap JS (CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

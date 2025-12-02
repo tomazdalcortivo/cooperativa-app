@@ -3,34 +3,36 @@
 {% block conteudo %}
 <h2>Gestão de Utilizadores</h2>
 
-<table border="1" cellpadding="10" style="width: 100%; border-collapse: collapse;">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Email</th>
-            <th>Tipo</th>
-            <th>Estado</th>
-            <th>Ações</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for u in usuarios %}
-        <tr>
-            <td>{{ u.id }}</td>
-            <td>{{ u.email }}</td>
-            <td>
-                {% if u.tipo_usuario == 'admin' %}
-                <strong>ADMIN</strong>
-                {% else %}
-                {{ u.tipo_usuario }}
-                {% endif %}
-            </td>
-            <td>{{ 'Ativo' if u.ativo else 'Bloqueado' }}</td>
-            <td>
-                <a href="{{ url_for('admin.editar_usuario', id=u.id) }}">Editar</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="table-responsive">
+    <table class="table align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>ID</th>
+                <th>Email</th>
+                <th>Tipo</th>
+                <th>Estado</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in usuarios %}
+            <tr>
+                <td>{{ u.id }}</td>
+                <td>{{ u.email }}</td>
+                <td>
+                    {% if u.tipo_usuario == 'admin' %}
+                        <strong>ADMIN</strong>
+                    {% else %}
+                        {{ u.tipo_usuario }}
+                    {% endif %}
+                </td>
+                <td>{{ 'Ativo' if u.ativo else 'Bloqueado' }}</td>
+                <td>
+                    <a href="{{ url_for('admin.editar_usuario', id=u.id) }}">Editar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}

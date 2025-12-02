@@ -1,44 +1,43 @@
 {% extends "base.html" %}
 
 {% block conteudo %}
-<div class="produtor-profile">
-    <h2>Gerenciar Perfil</h2>
-    <p>Atualize suas informações de contato e endereço.</p>
+<div class="card">
+    <div class="card-body">
+        <h3>Gerenciar Perfil</h3>
+        <p class="text-muted">Atualize suas informações de contato e endereço.</p>
 
-    <form method="POST">
+        <form method="POST">
 
-        <div style="margin-bottom: 15px;">
-            <label>Nome Completo:</label>
-            <input type="text" name="nome" value="{{ perfil.nome or '' }}" required style="width: 100%; padding: 8px;">
-        </div>
+            <div class="mb-3">
+                <label class="form-label">Nome Completo</label>
+                <input type="text" name="nome" value="{{ perfil.nome or '' }}" required class="form-control">
+            </div>
 
-        <div style="margin-bottom: 15px;">
-            <label>CPF:</label>
-            <input type="text" name="cpf" value="{{ perfil.cpf or '' }}" style="width: 100%; padding: 8px;">
-        </div>
+            <div class="mb-3">
+                <label class="form-label">CPF</label>
+                <input type="text" name="cpf" value="{{ perfil.cpf or '' }}" class="form-control">
+            </div>
 
-        <div style="margin-bottom: 15px;">
-            <label>Telefone:</label>
-            <input type="text" name="telefone" value="{{ perfil.telefone or '' }}" style="width: 100%; padding: 8px;">
-        </div>
+            <div class="mb-3">
+                <label class="form-label">Telefone</label>
+                <input type="text" name="telefone" value="{{ perfil.telefone or '' }}" class="form-control">
+            </div>
 
-        <div style="margin-bottom: 15px;">
-            <label>Endereço da Propriedade:</label><br>
-            <textarea name="endereco" rows="3" style="width: 100%; padding: 8px;">{{ perfil.endereco or '' }}</textarea>
-        </div>
+            <div class="mb-3">
+                <label class="form-label">Endereço da Propriedade</label>
+                <textarea name="endereco" rows="3" class="form-control">{{ perfil.endereco or '' }}</textarea>
+            </div>
 
-        <div style="margin-bottom: 15px;">
-            <label>Certificações (Orgânico, etc):</label><br>
-            <textarea name="certificacoes" rows="3"
-                style="width: 100%; padding: 8px;">{{ perfil.certificacoes or '' }}</textarea>
-        </div>
+            <div class="mb-3">
+                <label class="form-label">Certificações (Orgânico, etc)</label>
+                <textarea name="certificacoes" rows="3" class="form-control">{{ perfil.certificacoes or '' }}</textarea>
+            </div>
 
-        <button type="submit"
-            style="padding: 10px 20px; background-color: #28a745; color: white; border: none; cursor: pointer;">
-            Salvar Alterações
-        </button>
-
-        <a href="{{ url_for('produtor.painel') }}" style="margin-left: 15px;">Voltar ao Painel</a>
-    </form>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-success">Salvar Alterações</button>
+                <a href="{{ url_for('produtor.painel') }}" class="btn btn-outline-secondary">Voltar ao Painel</a>
+            </div>
+        </form>
+    </div>
 </div>
 {% endblock %}
