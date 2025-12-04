@@ -26,28 +26,32 @@
 
             <div class="mt-auto">
 
-                <div class="acoes" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #eee;">
+                <div class="acoes mt-3 pt-3 border-top d-flex flex-column align-items-center">
 
                     {% if p.estoque > 0 %}
                     {% if current_user.is_authenticated and current_user.tipo_usuario == 'cliente' %}
                     <form action="{{ url_for('pedidos.adicionar_ao_carrinho', produto_id=p.id) }}" method="POST"
-                        style="display: flex; gap: 5px;">
+                        class="d-flex gap-2 align-items-center justify-content-center">
                         <input type="number" name="quantidade" value="1" min="1" max="{{ p.estoque }}"
-                            style="width: 60px; padding: 5px;">
-                        <button type="submit" class="btn-comprar">Comprar</button>
+                            class="form-control form-control-sm" style="width:80px;">
+                        <button type="submit" class="btn btn-primary btn-sm">Comprar</button>
                     </form>
                     {% elif not current_user.is_authenticated %}
-                    <p><a href="{{ url_for('auth.login') }}">Faça login</a> para comprar</p>
+                    <p class="mb-0">
+                        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-box-arrow-in-right"></i> Faça login para comprar
+                        </a>
+                    </p>
                     {% endif %}
                     {% else %}
-                    <span style="color: red; font-weight: bold;">Esgotado</span>
+                    <span class="text-danger fw-bold">Esgotado</span>
                     {% endif %}
 
 
                     {% if current_user.is_authenticated and (current_user.tipo_usuario == 'admin' or
                     (current_user.produtor and
                     current_user.produtor.id == p.produtor_id)) %}
-                    <div class="text-end mt-2 small">
+                    <div class="w-100 text-end mt-2 small">
                         <a href="{{ url_for('produtos.editar_produto', id=p.id) }}">Editar</a> |
                         <a href="{{ url_for('produtos.deletar_produto', id=p.id) }}" class="text-danger"
                             onclick="return confirm('Excluir este produto?');">Excluir</a>
