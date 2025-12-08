@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Meus Dados</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+
+                    <div class="mb-3">
+                        <label class="form-label">Nome Completo</label>
+                        <input type="text" name="nome" value="{{ cliente.nome or '' }}" required class="form-control">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">CPF</label>
+                            <input type="text" name="cpf" value="{{ cliente.cpf or '' }}" class="form-control"
+                                placeholder="000.000.000-00">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Telefone / WhatsApp</label>
+                            <input type="text" name="telefone" value="{{ cliente.telefone or '' }}" class="form-control"
+                                placeholder="(00) 00000-0000">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Endereço Principal</label>
+                        <textarea name="endereco" rows="3" class="form-control"
+                            placeholder="Rua, Número, Bairro, Cidade">{{ cliente.enderecos or '' }}</textarea>
+                        <div class="form-text">Este endereço será usado como padrão para entregas futuras.</div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('cliente.painel') }}" class="btn btn-light me-md-2">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

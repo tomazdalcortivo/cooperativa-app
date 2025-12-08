@@ -6,6 +6,11 @@ produtor_categoria = db.Table('produtor_categoria',
     db.Column('produtor_id', db.Integer, db.ForeignKey('produtor.id'), primary_key=True),
     db.Column('categoria_id', db.Integer, db.ForeignKey('categoria.id'), primary_key=True)
 )
+class PontoRetirada(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nome = db.Column(db.String(100), nullable=False) 
+    endereco = db.Column(db.String(200), nullable=False)
+    horarios = db.Column(db.String(100)) 
 class ItemPedido(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     pedido_id = db.Column(db.Integer, db.ForeignKey('pedido.id'), nullable=False)
@@ -102,4 +107,8 @@ class Pedido(db.Model):
     forma_pagamento = db.Column(db.String(50))
     total = db.Column(db.Float, default=0.0)
     
+    data_agendada = db.Column(db.Date, nullable=True) 
+    ponto_retirada_id = db.Column(db.Integer, db.ForeignKey('ponto_retirada.id'), nullable=True)
+    
+    ponto_retirada = db.relationship('PontoRetirada')
     itens = db.relationship('ItemPedido', backref='pedido', lazy=True)

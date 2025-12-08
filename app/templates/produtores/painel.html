@@ -8,6 +8,7 @@
     </div>
     <div class="d-flex gap-2">
         <a href="{{ url_for('produtos.novo_produto') }}" class="btn btn-success">Cadastrar Novo Produto</a>
+        <a href="{{ url_for('produtor.gerenciar_pontos') }}" class="btn btn-primary">Locais de Entrega</a>
         <a href="{{ url_for('produtor.ver_perfil') }}" class="btn btn-outline-secondary">Ver Meu Perfil</a>
     </div>
 </div>
@@ -17,10 +18,10 @@
 <div class="card mb-4 border-0 shadow-sm bg-light">
     <div class="card-body">
         <h4 class="card-title text-primary"><i class="bi bi-graph-up"></i> Relatório de Desempenho</h4>
-        <p class="mb-3">Faturamento Total: <strong class="text-success fs-4">R$ {{ "%.2f"|format(faturamento_total)
-                }}</strong></p>
+        <p class="mb-3">Faturamento Total (Concluídos): <strong class="text-success fs-4">R$ {{
+                "%.2f"|format(faturamento_total) }}</strong></p>
 
-        <h6 class="text-muted text-uppercase small fw-bold">Vendas por Produto:</h6>
+        <h6 class="text-muted text-uppercase small fw-bold">Vendas por Produto (Entregues):</h6>
         {% if vendas_por_produto %}
         <div class="table-responsive bg-white rounded border">
             <table class="table table-sm mb-0 table-hover">
@@ -48,14 +49,14 @@
     </div>
 </div>
 
-<h4>Meus Produtos Cadastrados</h4>
+<h4>Meus Produtos</h4>
 {% if meus_produtos %}
 <ul class="list-group mb-4 shadow-sm">
     {% for p in meus_produtos %}
     <li class="list-group-item d-flex justify-content-between align-items-center">
         <div>
             <strong>{{ p.nome }}</strong>
-            <div class="small text-muted">R$ {{ "%.2f"|format(p.preco) }}</div>
+            <div class="small text-muted">R$ {{ "%.2f"|format(p.preco) }} | Estoque: {{ p.estoque }}</div>
         </div>
         <div>
             <a href="{{ url_for('produtos.editar_produto', id=p.id) }}"
@@ -70,33 +71,72 @@
 
 <hr>
 
-<h4>📦 Minhas Vendas Recebidas</h4>
+<h4>📦 Pedidos a Entregar (Vendas)</h4>
 
 {% if minhas_vendas %}
 <div class="table-responsive shadow-sm border rounded">
-    <table class="table mb-0 table-hover">
+    <table class="table mb-0 table-hover align-middle">
         <thead class="table-light">
             <tr>
-                <th>Data</th>
-                <th>Produto</th>
-                <th>Qtd</th>
-                <th>Valor Total</th>
+                <th>Data Pedido</th>
+                <th>Produto / Qtd</th>
                 <th>Comprador</th>
-                <th>Status Pedido</th>
+                <th>Onde Entregar (Ponto)</th>
+                <th>Data Agendada</th>
+                <th>Status / Ação</th>
             </tr>
         </thead>
         <tbody>
             {% for item in minhas_vendas %}
-            <tr>
+            <tr {% if item.pedido.status=='Entregue' %}class="table-success bg-opacity-10" {% endif %}>
                 <td>{{ item.pedido.data.strftime('%d/%m/%Y') }}</td>
-                <td>{{ item.produto.nome }}</td>
-                <td>{{ item.quantidade }} {{ item.produto.unidade }}</td>
-                <td class="text-success fw-bold">R$ {{ "%.2f"|format(item.preco_unitario * item.quantidade) }}</td>
+                <td>
+                    <strong>{{ item.produto.nome }}</strong><br>
+                    {{ item.quantidade }} {{ item.produto.unidade }}
+                </td>
                 <td>
                     {{ item.pedido.cliente.nome }}<br>
                     <small class="text-muted">{{ item.pedido.cliente.telefone or 'Sem telefone' }}</small>
                 </td>
-                <td><span class="badge bg-secondary">{{ item.pedido.status }}</span></td>
+
+                <td>
+                    {% if item.pedido.ponto_retirada %}
+                    <strong>{{ item.pedido.ponto_retirada.nome }}</strong><br>
+                    <small>{{ item.pedido.ponto_retirada.endereco }}</small>
+                    {% else %}
+                    <span class="text-muted">Não selecionado</span>
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if item.pedido.data_agendada %}
+                    {{ item.pedido.data_agendada.strftime('%d/%m/%Y') }}
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if item.pedido.status == 'Entregue' %}
+                    <span class="badge bg-success fs-6">
+                        <i class="bi bi-check-circle-fill"></i> Concluído
+                    </span>
+                    {% else %}
+                    <span class="badge bg-secondary mb-2">{{ item.pedido.status }}</span>
+                    <br>
+                    <form action="{{ url_for('produtor.atualizar_status', pedido_id=item.pedido.id) }}" method="POST"
+                        class="d-inline">
+                        <select name="novo_status"
+                            class="form-select form-select-sm d-inline-block w-auto border-primary"
+                            style="font-size: 0.85em;" onchange="this.form.submit()">
+                            <option value="" selected disabled>Mudar status...</option>
+                            <option value="Em Preparação">Em Preparação</option>
+                            <option value="Pronto para Retirada">Pronto</option>
+                            <option value="Entregue">Concluído (Finalizar)</option>
+                        </select>
+                    </form>
+                    {% endif %}
+                </td>
             </tr>
             {% endfor %}
         </tbody>

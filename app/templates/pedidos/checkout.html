@@ -1,43 +1,67 @@
 {% extends "base.html" %}
 
 {% block conteudo %}
-<h2>Finalizar Pedido</h2>
-
-<div class="row g-4">
-    <div class="col-md-6">
-        <div class="card">
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white">
+                <h4 class="mb-0">Finalizar Pedido</h4>
+            </div>
             <div class="card-body">
-                <h5>Resumo</h5>
-                <ul class="list-group mb-3">
-                    {% for item in itens %}
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <div>{{ item.quantidade }}x {{ item.produto.nome }}</div>
-                        <div>R$ {{ "%.2f"|format(item.subtotal) }}</div>
-                    </li>
-                    {% endfor %}
-                </ul>
-                <h5 class="text-end">Total a Pagar: <span class="text-success">R$ {{ "%.2f"|format(total) }}</span></h5>
+                <form method="POST">
+
+                    <h5 class="text-success mb-3">1. Agendamento</h5>
+                    <div class="mb-3">
+                        <label class="form-label">Data de Retirada/Entrega</label>
+                        <input type="date" name="data_agendada" required class="form-control"
+                            min="{{ datetime.now().strftime('%Y-%m-%d') }}">
+                        <div class="form-text">Escolha uma data a partir de hoje.</div>
+                    </div>
+
+                    <h5 class="text-success mb-3 mt-4">2. Local de Retirada</h5>
+                    <div class="mb-3">
+                        <label class="form-label">Escolha onde buscar:</label>
+                        <select name="ponto_retirada" class="form-select" required>
+                            <option value="">Selecione um ponto...</option>
+                            {% for ponto in pontos %}
+                            <option value="{{ ponto.id }}">
+                                {{ ponto.nome }} - {{ ponto.endereco }} ({{ ponto.horarios }})
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <h5 class="text-success mb-3 mt-4">3. Pagamento</h5>
+                    <div class="mb-3">
+                        <select name="pagamento" class="form-select" required>
+                            <option value="Pix">Pix no ato</option>
+                            <option value="Dinheiro">Dinheiro</option>
+                            <option value="Cartao">Cartão</option>
+                        </select>
+                    </div>
+
+                    <hr>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fs-4 fw-bold">Total: R$ {{ "%.2f"|format(total) }}</span>
+                        <button type="submit" class="btn btn-success btn-lg px-5">Confirmar Pedido</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
-    <div class="col-md-6">
-        <div class="card">
+    <div class="col-md-4">
+        <div class="card shadow-sm bg-light">
             <div class="card-body">
-                <h5>Dados de Entrega e Pagamento</h5>
-                <form method="POST">
-                    <div class="mb-3">
-                        <label class="form-label">Forma de Pagamento</label>
-                        <select name="pagamento" required class="form-select">
-                            <option value="Pix">Pix</option>
-                            <option value="Dinheiro">Dinheiro na Entrega</option>
-                            <option value="Cartao">Cartão na Entrega</option>
-                        </select>
-                    </div>
-
-                    <p><strong>Entregar em:</strong> {{ current_user.cliente.enderecos or 'Endereço não cadastrado' }}</p>
-                    <button type="submit" class="btn btn-success w-100">CONFIRMAR PEDIDO</button>
-                </form>
+                <h5>Resumo</h5>
+                <ul class="list-unstyled">
+                    {% for item in itens %}
+                    <li class="mb-2 pb-2 border-bottom">
+                        {{ item.quantidade }}x {{ item.produto.nome }}
+                        <span class="float-end">R$ {{ "%.2f"|format(item.subtotal) }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
     </div>

@@ -3,16 +3,27 @@
 {% block conteudo %}
 <div class="card shadow-sm">
     <div class="card-body">
-        <h2 class="card-title mb-4"><i class="bi bi-cart"></i> Seu Carrinho</h2>
+        <h2 class="card-title mb-4">Seu Carrinho</h2>
+
+        {% if alertas_minimo %}
+        <div class="alert alert-warning">
+            <strong>Atenção:</strong> Algumas categorias têm pedido mínimo de R$ 20,00:
+            <ul class="mb-0">
+                {% for msg in alertas_minimo %}
+                <li>{{ msg }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
 
         {% if itens %}
-        <div class="table-responsive">
-            <table class="table table-hover align-middle">
-                <thead class="table-light">
+        <form action="{{ url_for('pedidos.atualizar_carrinho') }}" method="POST">
+            <table class="table align-middle">
+                <thead>
                     <tr>
                         <th>Produto</th>
-                        <th>Preço Unitário</th>
-                        <th class="text-center">Qtd</th>
+                        <th>Preço</th>
+                        <th style="width: 150px;">Qtd</th>
                         <th class="text-end">Subtotal</th>
                         <th></th>
                     </tr>
@@ -20,53 +31,45 @@
                 <tbody>
                     {% for item in itens %}
                     <tr>
+                        <td>{{ item.produto.nome }}<br><small class="text-muted">{{ item.produto.categoria.nome
+                                }}</small></td>
+                        <td>R$ {{ "%.2f"|format(item.preco_unitario) }}</td>
                         <td>
-                            <strong>{{ item.produto.nome }}</strong><br>
-                            <small class="text-muted">{{ item.produto.unidade }}</small>
+                            <input type="number" name="qtd_{{ item.produto.id }}" value="{{ item.quantidade }}" min="0"
+                                max="{{ item.produto.estoque }}" class="form-control form-control-sm">
                         </td>
+                        <td class="text-end">R$ {{ "%.2f"|format(item.subtotal) }}</td>
                         <td>
-                            {% if item.preco_unitario < item.produto.preco %} <span
-                                class="text-decoration-line-through text-muted small">R$ {{
-                                "%.2f"|format(item.produto.preco) }}</span><br>
-                                <span class="text-danger fw-bold">R$ {{ "%.2f"|format(item.preco_unitario) }}</span>
-                                {% else %}
-                                R$ {{ "%.2f"|format(item.preco_unitario) }}
-                                {% endif %}
-                        </td>
-                        <td class="text-center">{{ item.quantidade }}</td>
-                        <td class="text-end fw-bold">R$ {{ "%.2f"|format(item.subtotal) }}</td>
-                        <td class="text-end">
                             <a href="{{ url_for('pedidos.remover_do_carrinho', produto_id=item.produto.id) }}"
-                                class="btn btn-sm btn-outline-danger" title="Remover">
-                                <i class="bi bi-trash"></i>
-                            </a>
+                                class="text-danger"><i class="bi bi-trash"></i></a>
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
-                <tfoot class="table-light">
+                <tfoot>
                     <tr>
-                        <td colspan="3" class="text-end fw-bold fs-5">Total Geral:</td>
-                        <td class="text-end fw-bold fs-5 text-success">R$ {{ "%.2f"|format(total) }}</td>
+                        <td colspan="3" class="text-end fw-bold">Total:</td>
+                        <td class="text-end fw-bold text-success fs-5">R$ {{ "%.2f"|format(total) }}</td>
                         <td></td>
                     </tr>
                 </tfoot>
             </table>
-        </div>
 
-        <div class="d-flex justify-content-end gap-2 mt-3">
-            <a href="{{ url_for('produtos.listar_produtos') }}" class="btn btn-outline-secondary">Continuar
-                Comprando</a>
-            <a href="{{ url_for('pedidos.checkout') }}" class="btn btn-success btn-lg">Finalizar Compra <i
-                    class="bi bi-arrow-right"></i></a>
-        </div>
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-outline-primary">
+                    <i class="bi bi-arrow-clockwise"></i> Atualizar Quantidades
+                </button>
+
+                {% if not alertas_minimo %}
+                <a href="{{ url_for('pedidos.checkout') }}" class="btn btn-success btn-lg">Finalizar Compra</a>
+                {% else %}
+                <button disabled class="btn btn-secondary btn-lg" title="Atingir o mínimo para continuar">Finalizar
+                    Compra</button>
+                {% endif %}
+            </div>
+        </form>
         {% else %}
-        <div class="text-center py-5">
-            <i class="bi bi-cart-x fs-1 text-muted mb-3"></i>
-            <h4>Seu carrinho está vazio.</h4>
-            <p class="text-muted">Navegue pelo catálogo e adicione produtos deliciosos!</p>
-            <a href="{{ url_for('produtos.listar_produtos') }}" class="btn btn-primary mt-3">Ir para Produtos</a>
-        </div>
+        <p>Seu carrinho está vazio.</p>
         {% endif %}
     </div>
 </div>

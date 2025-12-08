@@ -2,106 +2,90 @@
 <html lang="pt-br">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CoopVale</title>
-    <!-- Bootstrap CSS (CDN) -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Optional icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <!-- Custom styles -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-<body class="bg-light text-dark">
+<body>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success mb-4 shadow-sm">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="/">
-                <div class="brand-leaf">🌿</div>
-                <span class="ms-2 fw-bold text-success">CoopVale</span>
-            </a>
+            <a class="navbar-brand fw-bold" href="/">CoopVale 🚜</a>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
-                aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link text-white" href="/">Início</a></li>
+                    <li class="nav-item"><a class="nav-link text-white"
+                            href="{{ url_for('produtos.listar_produtos') }}">Produtos</a></li>
 
-            <div class="collapse navbar-collapse" id="mainNav">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link" href="/">Início</a></li>
-                    <li class="nav-item"><a class="nav-link"
-                            href="{{ url_for('produtos.listar_produtos') }}">Produtos</a>
+                    {% if current_user.tipo_usuario == 'cliente' %}
+                    <li class="nav-item">
+                        <a class="nav-link text-warning fw-bold" href="{{ url_for('pedidos.ver_carrinho') }}">
+                            <i class="bi bi-cart-fill"></i> Carrinho
+                        </a>
                     </li>
+                    {% endif %}
                 </ul>
 
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+                <div class="d-flex align-items-center gap-2">
                     {% if current_user.is_authenticated %}
+
                     {% if current_user.tipo_usuario == 'produtor' %}
-                    <li class="nav-item"><a class="nav-link text-warning fw-semibold"
-                            href="{{ url_for('produtor.painel') }}">Área do Produtor</a></li>
+                    <a href="{{ url_for('produtor.painel') }}" class="btn btn-warning btn-sm fw-bold">
+                        <i class="bi bi-speedometer2"></i> Área do Produtor
+                    </a>
                     {% endif %}
 
                     {% if current_user.tipo_usuario == 'admin' %}
-                    <li class="nav-item"><a clasçs="nav-link text-orange fw-semibold"
-                            href="{{ url_for('admin.dashboard') }}">Admin</a></li>
+                    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-danger btn-sm fw-bold">Admin</a>
                     {% endif %}
 
                     {% if current_user.tipo_usuario == 'cliente' %}
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('pedidos.ver_carrinho') }}">
-                            <i class="bi bi-cart3"></i> Carrinho</a></li>
+                    <a href="{{ url_for('cliente.painel') }}" class="btn btn-light btn-sm text-success fw-bold">
+                        <i class="bi bi-person-circle"></i> Minha Área
+                    </a>
                     {% endif %}
 
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="userMenu" role="button"
-                            data-bs-toggle="dropdown" aria-expanded="false">Olá, {{ current_user.email }}</a>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
-                            <li><a class="dropdown-item" href="#">Perfil</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Sair</a></li>
-                        </ul>
-                    </li>
+                    <span class="text-white ms-2 small">
+                        Olá, {{ current_user.email }}
+                        <span class="badge bg-dark opacity-50">{{ current_user.tipo_usuario }}</span>
+                    </span>
+
+                    <a href="{{ url_for('auth.logout') }}" class="btn btn-outline-light btn-sm ms-2">Sair</a>
 
                     {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link btn btn-sm btn-success ms-2 text-dark hover-text-white"
-                            href="{{ url_for('auth.login') }}">
-                            Login
-                        </a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link btn btn-sm btn-success ms-2 text-dark hover-text-white"
-                            href="{{ url_for('auth.registro') }}">
-                            Criar Conta
-                        </a>
-                    </li>
-
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-light btn-sm">Entrar</a>
+                    <a href="{{ url_for('auth.registro') }}" class="btn btn-outline-light btn-sm">Criar Conta</a>
                     {% endif %}
-                </ul>
+                </div>
             </div>
         </div>
     </nav>
 
-    <main class="py-4">
-        <div class="container">
-            {% with messages = get_flashed_messages() %}
-            {% if messages %}
-            <div class="alert alert-info">
-                <ul class="mb-0">
-                    {% for message in messages %}
-                    <li>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-            {% endif %}
-            {% endwith %}
-
-            {% block conteudo %}{% endblock %}
+    <div class="container" style="min-height: 80vh;">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
-    </main>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
 
-    <!-- Bootstrap JS (CDN) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+        {% block conteudo %}{% endblock %}
+    </div>
+
+    <footer class="bg-light text-center py-3 mt-5 border-top">
+        <p class="text-muted mb-0">© 2025 CoopVale - Sistema de Cooperativa Rural</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

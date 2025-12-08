@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm text-center">
+            <div class="card-body">
+                <div
+                    style="width: 80px; height: 80px; background: #e9ecef; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+                    <i class="bi bi-person fs-1 text-secondary"></i>
+                </div>
+                <h4 class="card-title">{{ current_user.cliente.nome }}</h4>
+                <p class="text-muted mb-1">{{ current_user.email }}</p>
+                <p class="small text-muted mb-3">{{ current_user.cliente.enderecos or 'Sem endereço cadastrado' }}</p>
+
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('cliente.perfil') }}" class="btn btn-outline-primary">
+                        <i class="bi bi-pencil"></i> Editar Meus Dados
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3>Meus Pedidos Recentes</h3>
+            <a href="{{ url_for('pedidos.meus_pedidos') }}" class="btn btn-sm btn-link">Ver Histórico Completo</a>
+        </div>
+
+        {% if pedidos %}
+        <div class="list-group shadow-sm">
+            {% for p in pedidos %}
+            <a href="#" class="list-group-item list-group-item-action" aria-current="true">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Pedido #{{ p.id }}</h5>
+                    <small class="text-muted">{{ p.data.strftime('%d/%m/%Y') }}</small>
+                </div>
+                <p class="mb-1">
+                    Status:
+                    <span
+                        class="badge {% if p.status == 'Entregue' %}bg-success{% else %}bg-warning text-dark{% endif %}">
+                        {{ p.status }}
+                    </span>
+                    | Total: <strong>R$ {{ "%.2f"|format(p.total) }}</strong>
+                </p>
+                <small class="text-muted">
+                    Retirada: {{ p.data_agendada.strftime('%d/%m/%Y') if p.data_agendada else 'A definir' }}
+                    {% if p.ponto_retirada %}
+                    em {{ p.ponto_retirada.nome }}
+                    {% endif %}
+                </small>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            Você ainda não fez nenhum pedido. <a href="{{ url_for('produtos.listar_produtos') }}">Ir às compras!</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
