@@ -1,43 +1,73 @@
 {% extends "base.html" %}
 
 {% block conteudo %}
-<h2>Seu Carrinho</h2>
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h2 class="card-title mb-4"><i class="bi bi-cart"></i> Seu Carrinho</h2>
 
-{% if itens %}
-<div class="table-responsive">
-    <table class="table align-middle">
-        <thead>
-            <tr>
-                <th>Produto</th>
-                <th>Preço</th>
-                <th>Qtd</th>
-                <th>Subtotal</th>
-                <th>Ação</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in itens %}
-            <tr>
-                <td>{{ item.produto.nome }}</td>
-                <td>R$ {{ "%.2f"|format(item.produto.preco) }}</td>
-                <td>{{ item.quantidade }}</td>
-                <td>R$ {{ "%.2f"|format(item.subtotal) }}</td>
-                <td><a href="{{ url_for('pedidos.remover_do_carrinho', produto_id=item.produto.id) }}" class="text-danger">Remover</a></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+        {% if itens %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Produto</th>
+                        <th>Preço Unitário</th>
+                        <th class="text-center">Qtd</th>
+                        <th class="text-end">Subtotal</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in itens %}
+                    <tr>
+                        <td>
+                            <strong>{{ item.produto.nome }}</strong><br>
+                            <small class="text-muted">{{ item.produto.unidade }}</small>
+                        </td>
+                        <td>
+                            {% if item.preco_unitario < item.produto.preco %} <span
+                                class="text-decoration-line-through text-muted small">R$ {{
+                                "%.2f"|format(item.produto.preco) }}</span><br>
+                                <span class="text-danger fw-bold">R$ {{ "%.2f"|format(item.preco_unitario) }}</span>
+                                {% else %}
+                                R$ {{ "%.2f"|format(item.preco_unitario) }}
+                                {% endif %}
+                        </td>
+                        <td class="text-center">{{ item.quantidade }}</td>
+                        <td class="text-end fw-bold">R$ {{ "%.2f"|format(item.subtotal) }}</td>
+                        <td class="text-end">
+                            <a href="{{ url_for('pedidos.remover_do_carrinho', produto_id=item.produto.id) }}"
+                                class="btn btn-sm btn-outline-danger" title="Remover">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot class="table-light">
+                    <tr>
+                        <td colspan="3" class="text-end fw-bold fs-5">Total Geral:</td>
+                        <td class="text-end fw-bold fs-5 text-success">R$ {{ "%.2f"|format(total) }}</td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
 
-<div class="d-flex justify-content-end align-items-center gap-3 mt-3">
-    <div class="text-end">
-        <h5 class="mb-0">Total: R$ {{ "%.2f"|format(total) }}</h5>
+        <div class="d-flex justify-content-end gap-2 mt-3">
+            <a href="{{ url_for('produtos.listar_produtos') }}" class="btn btn-outline-secondary">Continuar
+                Comprando</a>
+            <a href="{{ url_for('pedidos.checkout') }}" class="btn btn-success btn-lg">Finalizar Compra <i
+                    class="bi bi-arrow-right"></i></a>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="bi bi-cart-x fs-1 text-muted mb-3"></i>
+            <h4>Seu carrinho está vazio.</h4>
+            <p class="text-muted">Navegue pelo catálogo e adicione produtos deliciosos!</p>
+            <a href="{{ url_for('produtos.listar_produtos') }}" class="btn btn-primary mt-3">Ir para Produtos</a>
+        </div>
+        {% endif %}
     </div>
-    <a href="{{ url_for('produtos.listar_produtos') }}" class="btn btn-outline-secondary">Continuar Comprando</a>
-    <a href="{{ url_for('pedidos.checkout') }}" class="btn btn-success">Finalizar Compra</a>
 </div>
-{% else %}
-<p>Seu carrinho está vazio.</p>
-<a href="{{ url_for('produtos.listar_produtos') }}" class="btn btn-primary">Ir para Produtos</a>
-{% endif %}
 {% endblock %}

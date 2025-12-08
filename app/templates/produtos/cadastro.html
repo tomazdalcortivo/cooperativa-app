@@ -1,41 +1,44 @@
 {% extends "base.html" %}
 
 {% block conteudo %}
-<div class="card">
+<div class="card shadow-sm">
     <div class="card-body">
-        <h3 class="card-title">{{ 'Editar Produto' if produto else 'Novo Produto' }}</h3>
+        <h3 class="card-title mb-4 border-bottom pb-2">{{ 'Editar Produto' if produto else 'Novo Produto' }}</h3>
 
         <form method="POST" enctype="multipart/form-data">
 
-            <div class="mb-3">
-                <label class="form-label">Nome do Produto</label>
-                <input type="text" name="nome" value="{{ produto.nome if produto else '' }}" required
-                    class="form-control">
+            <h5 class="text-success mb-3">Informações Básicas</h5>
+
+            <div class="row">
+                <div class="col-md-8 mb-3">
+                    <label class="form-label">Nome do Produto</label>
+                    <input type="text" name="nome" value="{{ produto.nome if produto else '' }}" required
+                        class="form-control">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Categoria</label>
+                    <select name="categoria" required class="form-select">
+                        {% for c in categorias %}
+                        <option value="{{ c.id }}" {% if produto and produto.categoria_id==c.id %}selected{% endif %}>{{
+                            c.nome }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Foto do Produto</label>
                 <input type="file" name="imagem" accept="image/*" class="form-control">
                 {% if produto and produto.imagens %}
-                <div class="form-text text-success">
-                    <i class="bi bi-check-circle"></i> Imagem atual: {{ produto.imagens }}
+                <div class="form-text text-success mt-1">
+                    <i class="bi bi-check-circle"></i> Imagem atual salva: <strong>{{ produto.imagens }}</strong>
                 </div>
                 {% endif %}
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Categoria</label>
-                <select name="categoria" required class="form-select">
-                    {% for c in categorias %}
-                    <option value="{{ c.id }}" {% if produto and produto.categoria_id==c.id %}selected{% endif %}>{{
-                        c.nome }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
             <div class="row">
                 <div class="col-md-4 mb-3">
-                    <label class="form-label">Preço (R$)</label>
+                    <label class="form-label">Preço Original (R$)</label>
                     <input type="text" name="preco" value="{{ produto.preco if produto else '' }}"
                         placeholder="Ex: 10.50" required class="form-control">
                 </div>
@@ -50,6 +53,8 @@
                         </option>
                         <option value="dz" {% if produto and produto.unidade=='dz' %}selected{% endif %}>Dúzia (dz)
                         </option>
+                        <option value="pct" {% if produto and produto.unidade=='pct' %}selected{% endif %}>Pacote (pct)
+                        </option>
                     </select>
                 </div>
                 <div class="col-md-4 mb-3">
@@ -61,14 +66,54 @@
 
             <div class="mb-3">
                 <label class="form-label">Descrição</label>
-                <textarea name="descricao" rows="4"
+                <textarea name="descricao" rows="3"
                     class="form-control">{{ produto.descricao if produto else '' }}</textarea>
             </div>
 
-            <div class="d-flex gap-2">
-                <button type="submit" class="btn btn-success">{{ 'Salvar Alterações' if produto else 'Cadastrar Produto'
-                    }}</button>
-                <a href="{{ url_for('produtos.listar_produtos') }}" class="btn btn-outline-secondary">Cancelar</a>
+            <hr class="my-4">
+            <h5 class="text-success mb-3">Promoção & Disponibilidade</h5>
+
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label">Preço Promocional (R$)</label>
+                    <input type="text" name="preco_promocional"
+                        value="{{ produto.preco_promocional if produto and produto.preco_promocional else '' }}"
+                        class="form-control border-danger" placeholder="Opcional">
+                    <div class="form-text">Se preenchido, o preço original aparecerá riscado.</div>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Disponível a partir de:</label>
+                    <input type="date" name="disponivel_inicio"
+                        value="{{ produto.disponivel_inicio if produto and produto.disponivel_inicio else '' }}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Disponível até:</label>
+                    <input type="date" name="disponivel_fim" value="{{ produto.disponivel_fim if produto else '' }}"
+                        class="form-control">
+                    <div class="form-text">Para produtos sazonais. Deixe as datas vazias se for permanente.</div>
+                </div>
+            </div>
+
+            <hr class="my-4">
+            <h5 class="text-success mb-3">Detalhes do Produto</h5>
+
+            <div class="mb-3">
+                <label class="form-label">Origem / Fazenda</label>
+                <input type="text" name="origem" value="{{ produto.origem if produto else '' }}" class="form-control"
+                    placeholder="Ex: Sítio Vale do Sol - MG">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Informações Nutricionais / Outros Detalhes</label>
+                <textarea name="info_nutricional" rows="3" class="form-control"
+                    placeholder="Ex: Produto orgânico, sem glúten, rico em fibras...">{{ produto.info_nutricional if produto else '' }}</textarea>
+            </div>
+
+            <div class="d-flex gap-2 mt-4 pt-2 border-top">
+                <button type="submit" class="btn btn-success btn-lg px-4">{{ 'Salvar Produto' if produto else 'Cadastrar
+                    Produto' }}</button>
+                <a href="{{ url_for('produtos.listar_produtos') }}"
+                    class="btn btn-outline-secondary btn-lg px-4">Cancelar</a>
             </div>
         </form>
     </div>

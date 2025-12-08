@@ -65,12 +65,34 @@ class Produto(db.Model):
     nome = db.Column(db.String(100), nullable=False)
     descricao = db.Column(db.Text)
     preco = db.Column(db.Float, nullable=False)
-    unidade = db.Column(db.String(10)) 
+    unidade = db.Column(db.String(10))
     estoque = db.Column(db.Integer, default=0)
-    imagens = db.Column(db.Text)
+    imagens = db.Column(db.String(200))
     
     produtor_id = db.Column(db.Integer, db.ForeignKey("produtor.id"), nullable=False)
     categoria_id = db.Column(db.Integer, db.ForeignKey("categoria.id"), nullable=False)
+
+    preco_promocional = db.Column(db.Float, nullable=True) 
+    
+    disponivel_inicio = db.Column(db.Date, nullable=True)
+    disponivel_fim = db.Column(db.Date, nullable=True)
+
+    origem = db.Column(db.String(100), nullable=True)
+    info_nutricional = db.Column(db.Text, nullable=True) 
+
+
+    @property
+    def preco_atual(self):
+        if self.preco_promocional and self.preco_promocional > 0:
+            return self.preco_promocional
+        return self.preco
+
+    @property
+    def esta_disponivel_sazonalmente(self):
+        if not self.disponivel_inicio or not self.disponivel_fim:
+            return True 
+        hoje = datetime.today().date()
+        return self.disponivel_inicio <= hoje <= self.disponivel_fim
 
 class Pedido(db.Model):
     id = db.Column(db.Integer, primary_key=True)
