@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block conteudo %}
+<h2>Recuperar Senha</h2>
+<form method="POST">
+    <label>Digite seu email cadastrado:</label>
+    <input type="email" name="email" required class="form-control">
+    <button type="submit" class="btn btn-primary mt-2">Enviar Link</button>
+</form>
+{% endblock %}

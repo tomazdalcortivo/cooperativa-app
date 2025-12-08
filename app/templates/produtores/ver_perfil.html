@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+<div class="container">
+    <div class="card shadow-sm">
+        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">Meu Perfil de Produtor</h3>
+            <a href="{{ url_for('produtor.perfil') }}" class="btn btn-light btn-sm">
+                <i class="bi bi-pencil"></i> Editar Dados
+            </a>
+        </div>
+
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-2 text-center">
+                    <div
+                        style="width: 100px; height: 100px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                        <span style="font-size: 40px;">👨‍🌾</span>
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <h2 class="card-title">{{ perfil.nome }}</h2>
+                    <p class="text-muted mb-1"><i class="bi bi-envelope"></i> {{ current_user.email }}</p>
+                    <p class="text-muted"><i class="bi bi-telephone"></i> {{ perfil.telefone or 'Não informado' }}</p>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <h5 class="text-success border-bottom pb-2">Informações Pessoais</h5>
+                    <p><strong>CPF:</strong> {{ perfil.cpf or 'Não informado' }}</p>
+                    <p><strong>Endereço:</strong><br>
+                        {{ perfil.endereco or 'Não informado' }}
+                    </p>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <h5 class="text-success border-bottom pb-2">Detalhes da Produção</h5>
+                    <p><strong>Certificações:</strong><br>
+                        {% if perfil.certificacoes %}
+                        {{ perfil.certificacoes }}
+                        {% else %}
+                        <span class="text-muted font-italic">Nenhuma certificação cadastrada.</span>
+                        {% endif %}
+                    </p>
+
+                    <p><strong>Categorias:</strong></p>
+                    {% if perfil.categorias %}
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for cat in perfil.categorias %}
+                        <span class="badge bg-secondary">{{ cat.nome }}</span>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <span class="text-muted">Nenhuma categoria selecionada.</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="mt-3 text-end">
+                <a href="{{ url_for('produtor.painel') }}" class="btn btn-outline-secondary">Voltar ao Painel</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

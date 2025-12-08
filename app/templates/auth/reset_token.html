@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block conteudo %}
+<h2>Definir Nova Senha</h2>
+<form method="POST">
+    <label>Nova Senha:</label>
+    <input type="password" name="senha" required class="form-control">
+    <button type="submit" class="btn btn-primary mt-2">Salvar Senha</button>
+</form>
+{% endblock %}

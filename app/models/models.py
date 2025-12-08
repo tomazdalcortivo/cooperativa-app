@@ -2,6 +2,10 @@ from app import db
 from flask_login import UserMixin
 from datetime import datetime
 
+produtor_categoria = db.Table('produtor_categoria',
+    db.Column('produtor_id', db.Integer, db.ForeignKey('produtor.id'), primary_key=True),
+    db.Column('categoria_id', db.Integer, db.ForeignKey('categoria.id'), primary_key=True)
+)
 class ItemPedido(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     pedido_id = db.Column(db.Integer, db.ForeignKey('pedido.id'), nullable=False)
@@ -35,6 +39,8 @@ class Produtor(db.Model):
     certificacoes = db.Column(db.Text)
     
     produtos = db.relationship("Produto", backref="produtor", lazy=True)
+    categorias = db.relationship('Categoria', secondary=produtor_categoria, lazy='subquery',
+        backref=db.backref('produtores', lazy=True))
 
 class Cliente(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -4,7 +4,7 @@
 <div class="card">
     <div class="card-body">
         <h3>Gerenciar Perfil</h3>
-        <p class="text-muted">Atualize suas informações de contato e endereço.</p>
+        <p class="text-muted">Atualize suas informações de contato e o que você produz.</p>
 
         <form method="POST">
 
@@ -31,6 +31,21 @@
             <div class="mb-3">
                 <label class="form-label">Certificações (Orgânico, etc)</label>
                 <textarea name="certificacoes" rows="3" class="form-control">{{ perfil.certificacoes or '' }}</textarea>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label fw-bold">O que você produz? (Categorias)</label>
+                <div class="d-flex flex-wrap gap-2">
+                    {% for cat in categorias %}
+                    <div class="form-check border rounded p-2 pe-3 bg-light">
+                        <input class="form-check-input ms-0 me-2" type="checkbox" name="categorias" value="{{ cat.id }}"
+                            id="cat_{{ cat.id }}" {% if cat in perfil.categorias %}checked{% endif %}>
+                        <label class="form-check-label" for="cat_{{ cat.id }}">
+                            {{ cat.nome }}
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
 
             <div class="d-flex gap-2">

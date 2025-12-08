@@ -1,11 +1,11 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
 from app import db
-from app.models.models import Produto, Produtor, ItemPedido, Pedido 
+from app.models.models import Produto, Produtor, ItemPedido, Pedido, Categoria 
 from functools import wraps
+from sqlalchemy import func
 
 produtor_bp = Blueprint("produtor", __name__, url_prefix="/produtor")
-
 
 def produtor_required(f):
     @wraps(f)
@@ -19,6 +19,12 @@ def produtor_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+@produtor_bp.route("/meu-perfil")
+@login_required
+@produtor_required
+def ver_perfil():
+    perfil = current_user.produtor
+    return render_template("produtores/ver_perfil.html", perfil=perfil)
 
 @produtor_bp.route("/")
 @login_required
@@ -26,28 +32,31 @@ def produtor_required(f):
 def painel():
     meus_produtos = Produto.query.filter_by(produtor_id=current_user.produtor.id).all()
     
-    # 2. Minhas Vendas (Itens de pedidos que contêm meus produtos)
-    # Fazemos um join para pegar apenas itens dos produtos deste produtor
+
+    vendas_por_produto = db.session.query(
+        Produto.nome,
+        func.sum(ItemPedido.quantidade).label('total_qtd'),
+        func.sum(ItemPedido.preco_unitario * ItemPedido.quantidade).label('total_valor')
+    ).join(Produto).filter(
+        Produto.produtor_id == current_user.produtor.id
+    ).group_by(Produto.nome).all()
+
+    faturamento_total = sum([v.total_valor for v in vendas_por_produto])
+
     minhas_vendas = db.session.query(ItemPedido).join(Produto).filter(
         Produto.produtor_id == current_user.produtor.id
     ).order_by(ItemPedido.id.desc()).all()
     
     return render_template("produtores/painel.html", 
                          meus_produtos=meus_produtos, 
-                         minhas_vendas=minhas_vendas)
+                         minhas_vendas=minhas_vendas,
+                         vendas_por_produto=vendas_por_produto,
+                         faturamento_total=faturamento_total)
 
 @produtor_bp.route("/perfil", methods=["GET", "POST"])
 @login_required
 def perfil():
-    if current_user.tipo_usuario == 'produtor' and not current_user.produtor:
-        perfil = Produtor(usuario_id=current_user.id)
-        db.session.add(perfil)
-        db.session.commit()
-    elif current_user.tipo_usuario == 'produtor':
-        perfil = current_user.produtor
-    else:
-        flash("Funcionalidade apenas para Produtores.")
-        return redirect(url_for('index'))
+    perfil = current_user.produtor 
 
     if request.method == "POST":
         perfil.nome = request.form.get("nome")
@@ -55,9 +64,17 @@ def perfil():
         perfil.telefone = request.form.get("telefone")
         perfil.endereco = request.form.get("endereco")
         perfil.certificacoes = request.form.get("certificacoes")
+        
+        categoria_ids = request.form.getlist('categorias') 
+        perfil.categorias = [] 
+        for cat_id in categoria_ids:
+            cat = Categoria.query.get(int(cat_id))
+            if cat:
+                perfil.categorias.append(cat)
 
         db.session.commit()
-        flash("Seu perfil foi atualizado com sucesso!")
+        flash("Perfil atualizado com sucesso!")
         return redirect(url_for('produtor.painel'))
 
-    return render_template("produtores/perfil.html", perfil=perfil)
+    todas_categorias = Categoria.query.all()
+    return render_template("produtores/perfil.html", perfil=perfil, categorias=todas_categorias)
