@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block conteudo %}
+<div class="row">
+    <div class="col-md-6">
+        <div style="height: 300px; background: #eee; display: flex; align-items: center; justify-content: center;">
+            {% if p.imagens %}
+            <img src="{{ url_for('static', filename='uploads/' + p.imagens) }}"
+                style="max-height: 100%; max-width: 100%;">
+            {% else %}
+            <span>Sem Foto</span>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-md-6">
+        <h2>{{ p.nome }}</h2>
+        <div class="text-warning mb-2">
+            <span class="fs-5 fw-bold">{{ p.media_avaliacao }}</span> <i class="bi bi-star-fill"></i>
+            <small class="text-muted">({{ p.avaliacoes|length }} avaliações)</small>
+        </div>
+        <h3 class="text-success">R$ {{ "%.2f"|format(p.preco_atual) }} / {{ p.unidade }}</h3>
+        <p>{{ p.descricao }}</p>
+
+        {% if current_user.is_authenticated and current_user.tipo_usuario == 'cliente' %}
+        <a href="{{ url_for('cliente.favoritar', produto_id=p.id) }}" class="btn btn-outline-danger mb-3">
+            {% if p in current_user.cliente.produtos_favoritos %}
+            <i class="bi bi-heart-fill"></i> Remover dos Favoritos
+            {% else %}
+            <i class="bi bi-heart"></i> Adicionar aos Favoritos
+            {% endif %}
+        </a>
+        {% endif %}
+
+        <hr>
+        <h5>Avaliações</h5>
+        {% for av in p.avaliacoes %}
+        <div class="mb-2 border-bottom pb-2">
+            <strong>{{ av.nota }} <i class="bi bi-star-fill text-warning"></i></strong> - {{ av.comentario }}
+            <br><small class="text-muted">{{ av.data.strftime('%d/%m/%Y') }}</small>
+        </div>
+        {% else %}
+        <p>Seja o primeiro a avaliar!</p>
+        {% endfor %}
+
+        {% if item_id_para_avaliar %}
+        {# Cliente pode avaliar este produto porque tem um item de pedido não avaliado #}
+        <div class="mt-4 p-3 bg-light rounded">
+            <h6>Deixe sua avaliação:</h6>
+            <form action="{{ url_for('cliente.avaliar_produto', item_id=item_id_para_avaliar) }}" method="POST">
+                <select name="nota" class="form-select mb-2 w-auto">
+                    <option value="5">5 Estrelas - Excelente</option>
+                    <option value="4">4 Estrelas - Muito Bom</option>
+                    <option value="3">3 Estrelas - Bom</option>
+                    <option value="2">2 Estrelas - Ruim</option>
+                    <option value="1">1 Estrela - Péssimo</option>
+                </select>
+                <textarea name="comentario" class="form-control mb-2" placeholder="O que achou do produto?"
+                    rows="3"></textarea>
+                <button type="submit" class="btn btn-primary">Enviar Avaliação</button>
+            </form>
+        </div>
+        {% elif current_user.is_authenticated and current_user.tipo_usuario == 'cliente' %}
+        {# Cliente está logado, mas não tem item para avaliar #}
+        <div class="alert alert-info mt-4">
+            <i class="bi bi-info-circle"></i>
+            Para avaliar este produto, você precisa:
+            <ul class="mb-0 mt-1">
+                <li>Comprar o produto</li>
+                <li>Receber o pedido (status "Entregue")</li>
+                <li>Não ter avaliado ainda este item específico do pedido</li>
+            </ul>
+            <a href="{{ url_for('produtos.listar_produtos') }}" class="btn btn-sm btn-outline-primary mt-2">
+                Continuar comprando
+            </a>
+        </div>
+        {% else %}
+        {# Usuário não está logado como cliente #}
+        <div class="alert alert-secondary mt-4">
+            <i class="bi bi-exclamation-circle"></i>
+            Faça login como cliente para poder comprar e avaliar produtos.
+            <a href="{{ url_for('auth.login') }}" class="btn btn-sm btn-outline-primary mt-2">
+                Fazer login
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% if p.info_nutricional %}
+<hr>
+<div class="row mt-4">
+    <div class="col-md-12">
+        <h5>Informações Nutricionais</h5>
+        <pre style="white-space: pre-wrap; font-family: inherit;">{{ p.info_nutricional }}</pre>
+    </div>
+</div>
+{% endif %}
+
+{% if p.origem %}
+<div class="row mt-2">
+    <div class="col-md-12">
+        <h5>Origem</h5>
+        <p>{{ p.origem }}</p>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

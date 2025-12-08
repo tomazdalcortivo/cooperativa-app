@@ -183,3 +183,26 @@ def deletar_produto(id):
         flash("Produto removido.")
 
     return redirect(url_for('produtos.listar_produtos'))
+
+@produtos_bp.route("/detalhe/<int:id>")
+def detalhe_produto(id):
+    produto = Produto.query.get_or_404(id)
+    
+    item_id_para_avaliar = None
+    
+    if current_user.is_authenticated and current_user.tipo_usuario == 'cliente':
+        from app.models.models import ItemPedido, Pedido
+        
+        item = ItemPedido.query.join(Pedido).filter(
+            Pedido.cliente_id == current_user.cliente.id,
+            ItemPedido.produto_id == produto.id,
+            Pedido.status == 'Entregue',
+            ItemPedido.avaliacao == None
+        ).first()
+        
+        if item:
+            item_id_para_avaliar = item.id
+    
+    return render_template("produtos/detalhe.html", 
+                          p=produto, 
+                          item_id_para_avaliar=item_id_para_avaliar)

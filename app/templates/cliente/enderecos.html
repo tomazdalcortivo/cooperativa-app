@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block conteudo %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card shadow-sm p-3">
+            <h5>Novo Endereço</h5>
+            <form method="POST">
+                <input type="text" name="titulo" class="form-control mb-2" placeholder="Nome (Ex: Casa, Trabalho)"
+                    required>
+                <input type="text" name="cep" class="form-control mb-2" placeholder="CEP">
+                <input type="text" name="rua" class="form-control mb-2" placeholder="Rua/Av" required>
+                <div class="row">
+                    <div class="col-4"><input type="text" name="numero" class="form-control mb-2" placeholder="Nº"
+                            required></div>
+                    <div class="col-8"><input type="text" name="bairro" class="form-control mb-2" placeholder="Bairro">
+                    </div>
+                </div>
+                <input type="text" name="cidade" class="form-control mb-3" placeholder="Cidade">
+                <button type="submit" class="btn btn-success w-100">Salvar Endereço</button>
+            </form>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <h3>Meus Endereços</h3>
+        {% for end in enderecos %}
+        <div class="card mb-2">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>{{ end.titulo }}</strong><br>
+                    {{ end.rua }}, {{ end.numero }} - {{ end.bairro }}<br>
+                    {{ end.cidade }} - CEP: {{ end.cep }}
+                </div>
+                <a href="{{ url_for('cliente.deletar_endereco', id=end.id) }}" class="btn btn-sm btn-outline-danger"><i
+                        class="bi bi-trash"></i></a>
+            </div>
+        </div>
+        {% else %}
+        <p>Nenhum endereço salvo.</p>
+        {% endfor %}
+        <div class="mt-3">
+            <a href="{{ url_for('cliente.painel') }}" class="btn btn-outline-secondary">Voltar</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

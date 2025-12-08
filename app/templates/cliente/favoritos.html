@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block conteudo %}
+<h2>Meus Favoritos <i class="bi bi-heart-fill text-danger"></i></h2>
+{% if produtos %}
+<ul class="list-group mt-3">
+    {% for p in produtos %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div>
+            <strong>{{ p.nome }}</strong> - R$ {{ "%.2f"|format(p.preco_atual) }}
+        </div>
+        <div>
+            <a href="{{ url_for('produtos.detalhe_produto', id=p.id) }}" class="btn btn-sm btn-primary">Ver</a>
+            <a href="{{ url_for('cliente.favoritar', produto_id=p.id) }}" class="btn btn-sm btn-outline-danger"><i
+                    class="bi bi-trash"></i></a>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>Você ainda não favoritou nenhum produto.</p>
+{% endif %}
+{% endblock %}

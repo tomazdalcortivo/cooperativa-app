@@ -4,8 +4,9 @@
 <div class="row justify-content-center">
     <div class="col-md-8 col-lg-6">
         <div class="card shadow-sm">
-            <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">Meus Dados</h4>
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">Meus Dados Pessoais</h4>
+                <a href="{{ url_for('cliente.painel') }}" class="btn btn-sm btn-light text-primary">Voltar ao Painel</a>
             </div>
             <div class="card-body">
                 <form method="POST">
@@ -28,16 +29,26 @@
                         </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Endereço Principal</label>
-                        <textarea name="endereco" rows="3" class="form-control"
-                            placeholder="Rua, Número, Bairro, Cidade">{{ cliente.enderecos or '' }}</textarea>
-                        <div class="form-text">Este endereço será usado como padrão para entregas futuras.</div>
+                    <div class="form-check form-switch mb-4">
+                        <input class="form-check-input" type="checkbox" name="notificacoes" id="notifCheck" {% if
+                            cliente.receber_notificacoes %}checked{% endif %}>
+                        <label class="form-check-label" for="notifCheck">Receber notificações sobre meus pedidos por
+                            email</label>
                     </div>
 
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <a href="{{ url_for('cliente.painel') }}" class="btn btn-light me-md-2">Cancelar</a>
-                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                    <div class="alert alert-light border">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong><i class="bi bi-geo-alt"></i> Meus Endereços</strong><br>
+                                <small class="text-muted">Gerencie seus locais de entrega em uma área separada.</small>
+                            </div>
+                            <a href="{{ url_for('cliente.enderecos') }}"
+                                class="btn btn-outline-primary btn-sm">Gerenciar Endereços</a>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">Salvar Alterações</button>
                     </div>
                 </form>
             </div>
