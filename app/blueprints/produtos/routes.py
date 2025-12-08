@@ -1,9 +1,18 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
 from flask_login import login_required, current_user
 from app import db
 from app.models.models import Produto, Categoria
+from werkzeug.utils import secure_filename
+
+import os
 
 produtos_bp = Blueprint("produtos", __name__, url_prefix="/produtos", template_folder="templates")
+
+def salvar_imagem(imagem_file):
+    filename = secure_filename(imagem_file.filename)
+    path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+    imagem_file.save(path)
+    return filename
 
 @produtos_bp.route("/")
 def listar_produtos():
@@ -13,21 +22,27 @@ def listar_produtos():
 @produtos_bp.route("/novo", methods=["GET", "POST"])
 @login_required
 def novo_produto():
-
     if current_user.tipo_usuario != 'produtor':
         flash("Apenas produtores podem cadastrar produtos.")
         return redirect(url_for('produtos.listar_produtos'))
 
     if request.method == "POST":
+        nome_imagem = None
+        
+        if 'imagem' in request.files:
+            arquivo = request.files['imagem']
+            if arquivo and arquivo.filename != '':
+                nome_imagem = salvar_imagem(arquivo)
 
         produto = Produto(
             nome=request.form.get("nome"),
             descricao=request.form.get("descricao"),
-            preco=float(request.form.get("preco").replace(",", ".")), 
+            preco=float(request.form.get("preco").replace(",", ".")),
             unidade=request.form.get("unidade"),
             estoque=int(request.form.get("estoque")),
             categoria_id=int(request.form.get("categoria")),
-            produtor_id=current_user.produtor.id  
+            produtor_id=current_user.produtor.id,
+            imagens=nome_imagem 
         )
         
         db.session.add(produto)
@@ -44,7 +59,7 @@ def editar_produto(id):
     produto = Produto.query.get_or_404(id)
 
     if current_user.tipo_usuario != 'admin' and produto.produtor_id != current_user.produtor.id:
-        flash("Você não tem permissão para editar este produto.")
+        flash("Sem permissão.")
         return redirect(url_for('produtos.listar_produtos'))
 
     if request.method == "POST":
@@ -54,6 +69,11 @@ def editar_produto(id):
         produto.unidade = request.form.get("unidade")
         produto.estoque = int(request.form.get("estoque"))
         produto.categoria_id = int(request.form.get("categoria"))
+
+        if 'imagem' in request.files:
+            arquivo = request.files['imagem']
+            if arquivo and arquivo.filename != '':
+                produto.imagens = salvar_imagem(arquivo)
 
         db.session.commit()
         flash("Produto atualizado!")
