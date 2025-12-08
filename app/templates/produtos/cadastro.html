@@ -63,59 +63,64 @@
                         class="form-control">
                 </div>
             </div>
-
-            <div class="mb-3">
-                <label class="form-label">Descrição</label>
-                <textarea name="descricao" rows="3"
-                    class="form-control">{{ produto.descricao if produto else '' }}</textarea>
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Venda Mínima</label>
+                <input type="number" name="quantidade_minima" value="{{ produto.quantidade_minima if produto else 1 }}"
+                    min="1" step="1" class="form-control border-warning">
+                <div class="form-text">Mínimo que o cliente deve comprar (Ex: 5 para 5kg).</div>
             </div>
-
-            <hr class="my-4">
-            <h5 class="text-success mb-3">Promoção & Disponibilidade</h5>
-
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <label class="form-label">Preço Promocional (R$)</label>
-                    <input type="text" name="preco_promocional"
-                        value="{{ produto.preco_promocional if produto and produto.preco_promocional else '' }}"
-                        class="form-control border-danger" placeholder="Opcional">
-                    <div class="form-text">Se preenchido, o preço original aparecerá riscado.</div>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Disponível a partir de:</label>
-                    <input type="date" name="disponivel_inicio"
-                        value="{{ produto.disponivel_inicio if produto and produto.disponivel_inicio else '' }}">
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Disponível até:</label>
-                    <input type="date" name="disponivel_fim" value="{{ produto.disponivel_fim if produto else '' }}"
-                        class="form-control">
-                    <div class="form-text">Para produtos sazonais. Deixe as datas vazias se for permanente.</div>
-                </div>
-            </div>
-
-            <hr class="my-4">
-            <h5 class="text-success mb-3">Detalhes do Produto</h5>
-
-            <div class="mb-3">
-                <label class="form-label">Origem / Fazenda</label>
-                <input type="text" name="origem" value="{{ produto.origem if produto else '' }}" class="form-control"
-                    placeholder="Ex: Sítio Vale do Sol - MG">
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Informações Nutricionais / Outros Detalhes</label>
-                <textarea name="info_nutricional" rows="3" class="form-control"
-                    placeholder="Ex: Produto orgânico, sem glúten, rico em fibras...">{{ produto.info_nutricional if produto else '' }}</textarea>
-            </div>
-
-            <div class="d-flex gap-2 mt-4 pt-2 border-top">
-                <button type="submit" class="btn btn-success btn-lg px-4">{{ 'Salvar Produto' if produto else 'Cadastrar
-                    Produto' }}</button>
-                <a href="{{ url_for('produtos.listar_produtos') }}"
-                    class="btn btn-outline-secondary btn-lg px-4">Cancelar</a>
-            </div>
-        </form>
     </div>
+
+    <div class="mb-3">
+        <label class="form-label">Descrição</label>
+        <textarea name="descricao" rows="3" class="form-control">{{ produto.descricao if produto else '' }}</textarea>
+    </div>
+
+    <hr class="my-4">
+    <h5 class="text-success mb-3">Promoção & Disponibilidade</h5>
+
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label class="form-label">Preço Promocional (R$)</label>
+            <input type="text" name="preco_promocional"
+                value="{{ produto.preco_promocional if produto and produto.preco_promocional else '' }}"
+                class="form-control border-danger" placeholder="Opcional">
+            <div class="form-text">Se preenchido, o preço original aparecerá riscado.</div>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Disponível a partir de:</label>
+            <input type="date" name="disponivel_inicio"
+                value="{{ produto.disponivel_inicio if produto and produto.disponivel_inicio else '' }}">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Disponível até:</label>
+            <input type="date" name="disponivel_fim" value="{{ produto.disponivel_fim if produto else '' }}"
+                class="form-control">
+            <div class="form-text">Para produtos sazonais. Deixe as datas vazias se for permanente.</div>
+        </div>
+    </div>
+
+    <hr class="my-4">
+    <h5 class="text-success mb-3">Detalhes do Produto</h5>
+
+    <div class="mb-3">
+        <label class="form-label">Origem / Fazenda</label>
+        <input type="text" name="origem" value="{{ produto.origem if produto else '' }}" class="form-control"
+            placeholder="Ex: Sítio Vale do Sol - MG">
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Informações Nutricionais / Outros Detalhes</label>
+        <textarea name="info_nutricional" rows="3" class="form-control"
+            placeholder="Ex: Produto orgânico, sem glúten, rico em fibras...">{{ produto.info_nutricional if produto else '' }}</textarea>
+    </div>
+
+    <div class="d-flex gap-2 mt-4 pt-2 border-top">
+        <button type="submit" class="btn btn-success btn-lg px-4">{{ 'Salvar Produto' if produto else 'Cadastrar
+            Produto' }}</button>
+        <a href="{{ url_for('produtos.listar_produtos') }}" class="btn btn-outline-secondary btn-lg px-4">Cancelar</a>
+    </div>
+    </form>
+</div>
 </div>
 {% endblock %}

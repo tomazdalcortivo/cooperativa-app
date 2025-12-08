@@ -64,7 +64,7 @@ class Categoria(db.Model):
     icone = db.Column(db.String(50))
     
     valor_minimo = db.Column(db.Float, default=0.0)
-    
+
     produtos = db.relationship("Produto", backref="categoria", lazy=True)
 
 class Produto(db.Model):
@@ -87,6 +87,7 @@ class Produto(db.Model):
     origem = db.Column(db.String(100), nullable=True)
     info_nutricional = db.Column(db.Text, nullable=True) 
 
+    quantidade_minima = db.Column(db.Float, default=1.0)
 
     @property
     def preco_atual(self):

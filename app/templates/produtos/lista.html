@@ -101,8 +101,14 @@
                         </div>
                         
                         <p class="small mb-2 fw-bold text-dark">
-                            <i class="bi bi-box-seam"></i> Estoque: {{ p.estoque }} disponíveis
+                            <i class="bi bi-box-seam"></i> Estoque: {{ p.estoque }}
                         </p>
+                        
+                        {% if p.quantidade_minima > 1 %}
+                            <div class="alert alert-warning py-1 px-2 mb-2 small border-warning text-dark">
+                                <i class="bi bi-info-circle"></i> Venda Mínima: <strong>{{ p.quantidade_minima|int }} {{ p.unidade }}</strong>
+                            </div>
+                        {% endif %}
                         
                         {% if p.origem %}
                             <p class="small mb-2 text-muted"><i class="bi bi-geo-alt-fill text-secondary"></i> {{ p.origem }}</p>
@@ -113,7 +119,13 @@
                                 
                                 {% if current_user.is_authenticated and current_user.tipo_usuario == 'cliente' %}
                                     <form action="{{ url_for('pedidos.adicionar_ao_carrinho', produto_id=p.id) }}" method="POST" class="d-flex gap-2">
-                                        <input type="number" name="quantidade" value="1" min="1" max="{{ p.estoque }}" class="form-control form-control-sm text-center" style="width: 70px;">
+                                        <input type="number" name="quantidade" 
+                                               value="{{ p.quantidade_minima|int }}" 
+                                               min="{{ p.quantidade_minima|int }}" 
+                                               max="{{ p.estoque }}" 
+                                               class="form-control form-control-sm text-center" 
+                                               style="width: 70px;">
+                                        
                                         <button type="submit" class="btn btn-primary btn-sm flex-fill">Comprar</button>
                                     </form>
                                 {% elif not current_user.is_authenticated %}

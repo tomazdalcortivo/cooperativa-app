@@ -9,41 +9,53 @@ pedidos_bp = Blueprint("pedidos", __name__, url_prefix="/pedidos")
 
 @pedidos_bp.route("/adicionar/<int:produto_id>", methods=["POST"])
 def adicionar_ao_carrinho(produto_id):
+    produto = Produto.query.get_or_404(produto_id) 
     carrinho = session.get('carrinho', {})
-    quantidade = int(request.form.get("quantidade", 1))
+    
+    quantidade_solicitada = int(request.form.get("quantidade", 1))
+    
+    if quantidade_solicitada < produto.quantidade_minima:
+        quantidade_solicitada = int(produto.quantidade_minima)
+        flash(f"Atenção: A venda mínima para {produto.nome} é de {produto.quantidade_minima} {produto.unidade}. Adicionamos o mínimo para você.")
+    
     id_str = str(produto_id)
-
+    
     if id_str in carrinho:
-        carrinho[id_str] += quantidade
+        nova_qtd = carrinho[id_str] + quantidade_solicitada
     else:
-        carrinho[id_str] = quantidade
-
+        nova_qtd = quantidade_solicitada
+        
+    carrinho[id_str] = nova_qtd
     session['carrinho'] = carrinho
-    flash("Produto adicionado.")
     return redirect(request.referrer or url_for('produtos.listar_produtos'))
 
 
 @pedidos_bp.route("/atualizar", methods=["POST"])
 def atualizar_carrinho():
     carrinho = session.get('carrinho', {})
-
+    
     for key in request.form:
         if key.startswith('qtd_'):
             parts = key.split('_')
             if len(parts) >= 2:
                 produto_id = parts[1]
+                produto = Produto.query.get(produto_id) 
+                
                 try:
                     nova_qtd = int(request.form.get(key))
-                    if nova_qtd > 0:
+                    
+                    if 0 < nova_qtd < produto.quantidade_minima:
+                        carrinho[produto_id] = int(produto.quantidade_minima)
+                        flash(f"Quantidade de {produto.nome} ajustada para o mínimo de {produto.quantidade_minima} {produto.unidade}.")
+                    elif nova_qtd > 0:
                         carrinho[produto_id] = nova_qtd
                     else:
-                        carrinho.pop(produto_id, None)
+                        carrinho.pop(produto_id, None) 
                 except ValueError:
                     pass
-
+                
     session['carrinho'] = carrinho
     session.modified = True
-    flash("Carrinho atualizado.")
     return redirect(url_for('pedidos.ver_carrinho'))
 
 
@@ -103,6 +115,17 @@ def remover_do_carrinho(produto_id):
 @pedidos_bp.route("/checkout", methods=["GET", "POST"])
 @login_required
 def checkout():
+    carrinho = session.get('carrinho', {})
+    if not carrinho:
+        return redirect(url_for('produtos.listar_produtos'))
+
+    produtos = Produto.query.filter(Produto.id.in_(carrinho.keys())).all()
+    
+    for p in produtos:
+        qtd = carrinho[str(p.id)]
+        if qtd < p.quantidade_minima:
+            flash(f"Você precisa comprar no mínimo {p.quantidade_minima} {p.unidade} de {p.nome}.")
+            return redirect(url_for('pedidos.ver_carrinho'))
     carrinho = session.get('carrinho', {})
     if not carrinho:
         return redirect(url_for('produtos.listar_produtos'))

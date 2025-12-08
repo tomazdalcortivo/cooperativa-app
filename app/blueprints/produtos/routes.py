@@ -9,7 +9,6 @@ from werkzeug.utils import secure_filename
 produtos_bp = Blueprint("produtos", __name__, url_prefix="/produtos")
 
 
-
 def parse_data_form(data_str):
     if not data_str:
         return None
@@ -23,7 +22,6 @@ def salvar_imagem(imagem_file):
     filename = secure_filename(imagem_file.filename)
     if not os.path.exists(current_app.config['UPLOAD_FOLDER']):
         os.makedirs(current_app.config['UPLOAD_FOLDER'])
-
     path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
     imagem_file.save(path)
     return filename
@@ -47,7 +45,6 @@ def listar_produtos():
     if produtor_id:
         query = query.filter_by(produtor_id=int(produtor_id))
 
-    
     if ordem == 'menor_preco':
         query = query.order_by(Produto.preco.asc())
     elif ordem == 'maior_preco':
@@ -56,7 +53,6 @@ def listar_produtos():
         query = query.order_by(Produto.preco_promocional.isnot(None).desc())
 
     produtos = query.all()
-
     categorias = Categoria.query.all()
     produtores = Produtor.query.all()
 
@@ -97,6 +93,9 @@ def novo_produto():
         else:
             preco_promo = None
 
+        qtd_min = request.form.get("quantidade_minima")
+        qtd_min = float(qtd_min) if qtd_min else 1.0
+
         produto = Produto(
             nome=nome_produto,
             descricao=request.form.get("descricao"),
@@ -112,7 +111,8 @@ def novo_produto():
             info_nutricional=request.form.get("info_nutricional"),
             disponivel_inicio=parse_data_form(
                 request.form.get("disponivel_inicio")),
-            disponivel_fim=parse_data_form(request.form.get("disponivel_fim"))
+            disponivel_fim=parse_data_form(request.form.get("disponivel_fim")),
+            quantidade_minima=qtd_min
         )
 
         db.session.add(produto)
@@ -150,15 +150,17 @@ def editar_produto(id):
         if preco_promo:
             produto.preco_promocional = float(preco_promo.replace(",", "."))
         else:
-            produto.preco_promocional = None 
+            produto.preco_promocional = None
 
         produto.origem = request.form.get("origem")
         produto.info_nutricional = request.form.get("info_nutricional")
-
         produto.disponivel_inicio = parse_data_form(
             request.form.get("disponivel_inicio"))
         produto.disponivel_fim = parse_data_form(
             request.form.get("disponivel_fim"))
+
+        qtd_min = request.form.get("quantidade_minima")
+        produto.quantidade_minima = float(qtd_min) if qtd_min else 1.0
 
         db.session.commit()
         flash("Produto atualizado!")
