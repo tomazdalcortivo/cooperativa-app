@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Comprovante - Pedido #{{ pedido.id }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            color: #333;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .info-group {
+            margin-bottom: 20px;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .table th,
+        .table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .total {
+            text-align: right;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .btn-print {
+            background: #333;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+        }
+
+        @media print {
+            .btn-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>CoopVale</h1>
+        <h3>Comprovante de Pedido #{{ pedido.id }}</h3>
+        <p>Data: {{ pedido.data.strftime('%d/%m/%Y às %H:%M') }}</p>
+        <p>Status: {{ pedido.status }}</p>
+    </div>
+
+    <div class="info-group">
+        <strong>Cliente:</strong> {{ pedido.cliente.nome }} (CPF: {{ pedido.cliente.cpf or '-' }})<br>
+        <strong>Email:</strong> {{ pedido.cliente.usuario.email }}<br>
+        <strong>Telefone:</strong> {{ pedido.cliente.telefone }}
+    </div>
+
+    <div class="info-group">
+        <strong>Retirada/Entrega:</strong><br>
+        {% if pedido.ponto_retirada %}
+        Local: {{ pedido.ponto_retirada.nome }}<br>
+        Endereço: {{ pedido.ponto_retirada.endereco }}<br>
+        Funcionamento: {{ pedido.ponto_retirada.horarios }}
+        {% else %}
+        Local não selecionado.
+        {% endif %}
+        <br>
+        <strong>Data Agendada:</strong> {{ pedido.data_agendada.strftime('%d/%m/%Y') if pedido.data_agendada else 'A
+        combinar' }}
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Produto</th>
+                <th>Produtor</th>
+                <th>Qtd</th>
+                <th>Unitário</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in pedido.itens %}
+            <tr>
+                <td>{{ item.produto.nome }}</td>
+                <td>{{ item.produto.produtor.nome }}</td>
+                <td>{{ item.quantidade }} {{ item.produto.unidade }}</td>
+                <td>R$ {{ "%.2f"|format(item.preco_unitario) }}</td>
+                <td>R$ {{ "%.2f"|format(item.preco_unitario * item.quantidade) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="total">
+        Total do Pedido: R$ {{ "%.2f"|format(pedido.total) }}
+    </div>
+
+    <div style="margin-top: 40px; text-align: center;">
+        <a href="javascript:window.print()" class="btn-print">Imprimir Comprovante</a>
+        <br><br>
+        <a href="{{ url_for('cliente.painel') }}" class="btn-print" style="background: #ccc; color: black;">Voltar</a>
+    </div>
+</body>
+
+</html>

@@ -63,6 +63,8 @@ class Categoria(db.Model):
     descricao = db.Column(db.Text)
     icone = db.Column(db.String(50))
     
+    valor_minimo = db.Column(db.Float, default=0.0)
+    
     produtos = db.relationship("Produto", backref="categoria", lazy=True)
 
 class Produto(db.Model):

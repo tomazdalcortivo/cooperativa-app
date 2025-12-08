@@ -88,7 +88,8 @@
         </thead>
         <tbody>
             {% for item in minhas_vendas %}
-            <tr {% if item.pedido.status=='Entregue' %}class="table-success bg-opacity-10" {% endif %}>
+            <tr
+                class="{% if item.pedido.status == 'Entregue' %}table-success bg-opacity-10{% elif item.pedido.status == 'Cancelado' %}table-danger bg-opacity-10{% endif %}">
                 <td>{{ item.pedido.data.strftime('%d/%m/%Y') }}</td>
                 <td>
                     <strong>{{ item.produto.nome }}</strong><br>
@@ -120,6 +121,10 @@
                     {% if item.pedido.status == 'Entregue' %}
                     <span class="badge bg-success fs-6">
                         <i class="bi bi-check-circle-fill"></i> Concluído
+                    </span>
+                    {% elif item.pedido.status == 'Cancelado' %}
+                    <span class="badge bg-danger fs-6">
+                        <i class="bi bi-x-circle-fill"></i> Cancelado
                     </span>
                     {% else %}
                     <span class="badge bg-secondary mb-2">{{ item.pedido.status }}</span>

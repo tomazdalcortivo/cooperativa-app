@@ -1,13 +1,10 @@
-from flask import Blueprint, render_template, redirect, url_for, request, session, flash
+from flask import Blueprint, render_template, redirect, url_for, request, session, flash, abort
 from flask_login import login_required, current_user
 from app import db
-from app.models.models import Produto, Pedido, ItemPedido, PontoRetirada
+from app.models.models import Produto, Pedido, ItemPedido, PontoRetirada, Categoria
 from datetime import datetime
 
 pedidos_bp = Blueprint("pedidos", __name__, url_prefix="/pedidos")
-
-MINIMO_POR_CATEGORIA = 20.00
-
 
 
 @pedidos_bp.route("/adicionar/<int:produto_id>", methods=["POST"])
@@ -26,7 +23,6 @@ def adicionar_ao_carrinho(produto_id):
     return redirect(request.referrer or url_for('produtos.listar_produtos'))
 
 
-
 @pedidos_bp.route("/atualizar", methods=["POST"])
 def atualizar_carrinho():
     carrinho = session.get('carrinho', {})
@@ -41,7 +37,7 @@ def atualizar_carrinho():
                     if nova_qtd > 0:
                         carrinho[produto_id] = nova_qtd
                     else:
-                        carrinho.pop(produto_id, None) 
+                        carrinho.pop(produto_id, None)
                 except ValueError:
                     pass
 
@@ -56,7 +52,6 @@ def ver_carrinho():
     carrinho = session.get('carrinho', {})
     itens_carrinho = []
     total_geral = 0
-
     totais_categoria = {}
 
     if carrinho:
@@ -67,7 +62,6 @@ def ver_carrinho():
             subtotal = preco * qtd
             total_geral += subtotal
 
-            # Soma para validar mínimo
             cat_nome = p.categoria.nome
             totais_categoria[cat_nome] = totais_categoria.get(
                 cat_nome, 0) + subtotal
@@ -80,11 +74,14 @@ def ver_carrinho():
             })
 
     alertas_minimo = []
-    for cat, total in totais_categoria.items():
-        if total < MINIMO_POR_CATEGORIA:
-            faltam = MINIMO_POR_CATEGORIA - total
+    categorias_db = Categoria.query.all()
+
+    for cat in categorias_db:
+        total_atual = totais_categoria.get(cat.nome, 0)
+        if total_atual > 0 and total_atual < cat.valor_minimo:
+            faltam = cat.valor_minimo - total_atual
             alertas_minimo.append(
-                f"Categoria {cat}: Mínimo R$ {MINIMO_POR_CATEGORIA:.2f} (Faltam R$ {faltam:.2f})")
+                f"{cat.nome}: Mínimo R$ {cat.valor_minimo:.2f} (Faltam R$ {faltam:.2f})")
 
     return render_template("pedidos/carrinho.html",
                            itens=itens_carrinho,
@@ -117,10 +114,12 @@ def checkout():
         totais_categoria[p.categoria.nome] = totais_categoria.get(
             p.categoria.nome, 0) + (p.preco_atual * qtd)
 
-    for cat, total in totais_categoria.items():
-        if total < MINIMO_POR_CATEGORIA:
+    categorias_db = Categoria.query.all()
+    for cat in categorias_db:
+        total = totais_categoria.get(cat.nome, 0)
+        if total > 0 and total < cat.valor_minimo:
             flash(
-                f"Não é possível finalizar: Categoria {cat} não atingiu o mínimo de R$ {MINIMO_POR_CATEGORIA:.2f}")
+                f"Categoria {cat.nome} não atingiu o mínimo de R$ {cat.valor_minimo:.2f}")
             return redirect(url_for('pedidos.ver_carrinho'))
 
     if request.method == "POST":
@@ -153,23 +152,63 @@ def checkout():
                               produto_id=p.id, quantidade=qtd, preco_unitario=preco)
             db.session.add(item)
             total_pedido += (preco * qtd)
+
             if p.estoque >= qtd:
                 p.estoque -= qtd
 
         novo_pedido.total = total_pedido
         db.session.commit()
         session.pop('carrinho', None)
-        flash(f"Pedido #{novo_pedido.id} agendado com sucesso!")
-        return redirect(url_for('pedidos.meus_pedidos'))
+        flash(f"Pedido #{novo_pedido.id} realizado com sucesso!")
+        return redirect(url_for('cliente.painel'))
 
     pontos = PontoRetirada.query.all()
-
     total_geral = sum([p.preco_atual * carrinho[str(p.id)] for p in produtos])
     itens_checkout = [{'produto': p, 'quantidade': carrinho[str(
         p.id)], 'preco_unitario': p.preco_atual, 'subtotal': p.preco_atual * carrinho[str(p.id)]} for p in produtos]
 
     return render_template("pedidos/checkout.html", itens=itens_checkout, total=total_geral, pontos=pontos, datetime=datetime)
 
+
+
+@pedidos_bp.route("/cancelar/<int:pedido_id>", methods=["POST"])
+@login_required
+def cancelar_pedido(pedido_id):
+    pedido = Pedido.query.get_or_404(pedido_id)
+
+    if current_user.tipo_usuario != 'admin' and pedido.cliente_id != current_user.cliente.id:
+        flash("Não autorizado.")
+        return redirect(url_for('cliente.painel'))
+
+    if pedido.status in ['Entregue', 'Cancelado']:
+        flash("Este pedido não pode ser cancelado pois já foi finalizado.")
+        return redirect(url_for('cliente.painel'))
+
+    for item in pedido.itens:
+        produto = Produto.query.get(item.produto_id)
+        if produto:
+            produto.estoque += item.quantidade
+
+    pedido.status = "Cancelado"
+    db.session.commit()
+
+    flash(f"Pedido #{pedido.id} cancelado.")
+    return redirect(url_for('cliente.painel'))
+
+
+
+@pedidos_bp.route("/comprovante/<int:pedido_id>")
+@login_required
+def comprovante(pedido_id):
+    pedido = Pedido.query.get_or_404(pedido_id)
+
+    if current_user.tipo_usuario != 'admin' and \
+       (current_user.cliente and pedido.cliente_id != current_user.cliente.id) and \
+       (current_user.tipo_usuario != 'produtor'):
+        flash("Acesso negado.")
+        return redirect(url_for('index'))
+
+    return render_template("pedidos/comprovante.html", pedido=pedido)
 
 
 @pedidos_bp.route("/meus-pedidos")
