@@ -43,20 +43,12 @@
 
         {% if item_id_para_avaliar %}
         {# Cliente pode avaliar este produto porque tem um item de pedido não avaliado #}
-        <div class="mt-4 p-3 bg-light rounded">
-            <h6>Deixe sua avaliação:</h6>
-            <form action="{{ url_for('cliente.avaliar_produto', item_id=item_id_para_avaliar) }}" method="POST">
-                <select name="nota" class="form-select mb-2 w-auto">
-                    <option value="5">5 Estrelas - Excelente</option>
-                    <option value="4">4 Estrelas - Muito Bom</option>
-                    <option value="3">3 Estrelas - Bom</option>
-                    <option value="2">2 Estrelas - Ruim</option>
-                    <option value="1">1 Estrela - Péssimo</option>
-                </select>
-                <textarea name="comentario" class="form-control mb-2" placeholder="O que achou do produto?"
-                    rows="3"></textarea>
-                <button type="submit" class="btn btn-primary">Enviar Avaliação</button>
-            </form>
+        <div class="mt-4 p-3 bg-light rounded text-center">
+            <h6 class="mb-3">Você comprou este produto e pode avaliá-lo!</h6>
+            <a href="{{ url_for('cliente.avaliar_produto', item_id=item_id_para_avaliar) }}"
+                class="btn btn-primary btn-lg">
+                <i class="bi bi-star"></i> Deixar Minha Avaliação
+            </a>
         </div>
         {% elif current_user.is_authenticated and current_user.tipo_usuario == 'cliente' %}
         {# Cliente está logado, mas não tem item para avaliar #}

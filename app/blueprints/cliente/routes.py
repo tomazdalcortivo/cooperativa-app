@@ -116,6 +116,7 @@ def avaliar_produto(item_id):
         return redirect(url_for('index'))
 
     item = ItemPedido.query.get_or_404(item_id)
+    form = AvaliacaoForm() 
 
     if item.pedido.status != 'Entregue':
         flash("Você só pode avaliar itens de pedidos já entregues.", "danger")
@@ -129,30 +130,23 @@ def avaliar_produto(item_id):
         flash(f"O produto '{item.produto.nome}' já foi avaliado neste pedido.", "warning")
         return redirect(url_for('pedidos.meus_pedidos'))
 
-    if request.method == 'POST':
-        nota = request.form.get('nota', type=int)
-        comentario = request.form.get('comentario', '').strip()
-
-        if not nota or nota < 1 or nota > 5:
-            flash("Por favor, selecione uma nota entre 1 e 5.", "danger")
-            return render_template("cliente/avaliar_produto_simples.html", item=item)
-
+    if form.validate_on_submit():
         nova_avaliacao = Avaliacao(
-            nota=nota,
-            comentario=comentario if comentario else None,
+            nota=form.nota.data,
+            comentario=form.comentario.data if form.comentario.data else None,
             produto_id=item.produto_id,
             pedido_item_id=item.id
         )
         
         try:
             db.session.add(nova_avaliacao)
+            item.foi_avaliado = True 
             db.session.commit()
             flash(f"Avaliação para o produto '{item.produto.nome}' enviada com sucesso!", "success")
             return redirect(url_for('produtos.detalhe_produto', id=item.produto_id))
+        
         except Exception as e:
             db.session.rollback()
             flash(f"Erro ao salvar avaliação: {str(e)}", "danger")
-            return render_template("cliente/avaliar_produto_simples.html", item=item)
 
-    return render_template("cliente/avaliar_produto_simples.html", item=item)
-    
+    return render_template("cliente/avaliar_produto.html", item=item, form=form)
