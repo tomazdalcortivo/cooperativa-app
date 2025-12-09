@@ -29,6 +29,7 @@ def create_app():
     from .blueprints.produtores.routes import produtor_bp
     from .blueprints.pedidos.routes import pedidos_bp
     from .blueprints.cliente.routes import cliente_bp
+    from .blueprints.institucional.routes import institucional_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(produtos_bp)
@@ -36,11 +37,12 @@ def create_app():
     app.register_blueprint(produtor_bp)
     app.register_blueprint(pedidos_bp)
     app.register_blueprint(cliente_bp)
+    app.register_blueprint(institucional_bp)
 
 
-    from flask import render_template
+    from flask import render_template, redirect, url_for
     @app.route("/")
     def index():
-        return render_template("base.html")
+        return redirect(url_for('institucional.home'))
 
     return app

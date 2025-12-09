@@ -1,0 +1,381 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+<style>
+    .faq-header {
+        background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        color: white;
+        padding: 50px 0;
+        margin-bottom: 50px;
+    }
+
+    .faq-header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .faq-header p {
+        font-size: 1.1rem;
+        opacity: 0.95;
+    }
+
+    .faq-search {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        margin-bottom: 50px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+
+    .faq-search input {
+        width: 100%;
+        padding: 14px 20px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s;
+    }
+
+    .faq-search input:focus {
+        outline: none;
+        border-color: #2ecc71;
+        box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.1);
+    }
+
+    .faq-container {
+        max-width: 800px;
+        margin: 0 auto 60px;
+    }
+
+    .faq-category {
+        margin-bottom: 50px;
+    }
+
+    .faq-category-title {
+        color: #27ae60;
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 3px solid #2ecc71;
+    }
+
+    .faq-item {
+        background: white;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .faq-item:hover {
+        box-shadow: 0 5px 20px rgba(46, 204, 113, 0.15);
+    }
+
+    .faq-header-btn {
+        background: white;
+        border: none;
+        padding: 20px;
+        width: 100%;
+        text-align: left;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s;
+    }
+
+    .faq-header-btn:hover {
+        background: #f8f9fa;
+    }
+
+    .faq-header-btn.active {
+        background: linear-gradient(135deg, rgba(46, 204, 113, 0.1), rgba(39, 174, 96, 0.1));
+        color: #27ae60;
+    }
+
+    .faq-question {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #27ae60;
+    }
+
+    .faq-header-btn.active .faq-question {
+        color: #27ae60;
+    }
+
+    .faq-toggle-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #2ecc71;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        transition: transform 0.3s;
+        flex-shrink: 0;
+    }
+
+    .faq-header-btn.active .faq-toggle-icon {
+        transform: rotate(180deg);
+    }
+
+    .faq-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+    }
+
+    .faq-content.active {
+        max-height: 500px;
+    }
+
+    .faq-answer {
+        padding: 20px;
+        color: #666;
+        line-height: 1.8;
+        font-size: 1rem;
+        background: #f8f9fa;
+    }
+
+    .faq-answer a {
+        color: #2ecc71;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .faq-answer a:hover {
+        color: #27ae60;
+        text-decoration: underline;
+    }
+
+    .no-results {
+        text-align: center;
+        padding: 40px;
+        color: #999;
+    }
+
+    .no-results-icon {
+        font-size: 3rem;
+        margin-bottom: 15px;
+    }
+
+    .cta-section {
+        background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        color: white;
+        padding: 60px 0;
+        text-align: center;
+        margin-top: 60px;
+        border-radius: 15px;
+    }
+
+    .cta-section h2 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .cta-section p {
+        font-size: 1.1rem;
+        margin-bottom: 25px;
+        opacity: 0.95;
+    }
+
+    .btn-cta {
+        display: inline-block;
+        background: white;
+        color: #27ae60;
+        padding: 12px 30px;
+        border-radius: 25px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+    .btn-cta:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    @media (max-width: 768px) {
+        .faq-header h1 {
+            font-size: 1.8rem;
+        }
+
+        .faq-header-btn {
+            padding: 15px;
+        }
+
+        .faq-question {
+            font-size: 1rem;
+        }
+
+        .cta-section h2 {
+            font-size: 1.4rem;
+        }
+    }
+</style>
+
+<!-- Header -->
+<section class="faq-header">
+    <div class="container">
+        <h1>Perguntas Frequentes (FAQ)</h1>
+        <p>Encontre respostas para as dúvidas mais comuns</p>
+    </div>
+</section>
+
+<div class="container">
+    <!-- Search -->
+    <div class="faq-search">
+        <input type="text" id="faqSearch" placeholder="🔍 Pesquise por palavra-chave...">
+    </div>
+
+    <!-- FAQ Container -->
+    <div class="faq-container">
+        <!-- Shopping Category -->
+        <div class="faq-category">
+            <h2 class="faq-category-title">🛒 Compras e Pedidos</h2>
+
+            {% for faq in faqs %}
+                {% if faq.id <= 3 %}
+                <div class="faq-item">
+                    <button class="faq-header-btn" onclick="toggleFAQ(this)">
+                        <span class="faq-question">{{ faq.pergunta }}</span>
+                        <span class="faq-toggle-icon">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <div class="faq-answer">
+                            {{ faq.resposta }}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- Products Category -->
+        <div class="faq-category">
+            <h2 class="faq-category-title">🥬 Produtos e Qualidade</h2>
+
+            {% for faq in faqs %}
+                {% if faq.id >= 4 and faq.id <= 5 %}
+                <div class="faq-item">
+                    <button class="faq-header-btn" onclick="toggleFAQ(this)">
+                        <span class="faq-question">{{ faq.pergunta }}</span>
+                        <span class="faq-toggle-icon">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <div class="faq-answer">
+                            {{ faq.resposta }}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- Support Category -->
+        <div class="faq-category">
+            <h2 class="faq-category-title">💬 Suporte e Contato</h2>
+
+            {% for faq in faqs %}
+                {% if faq.id == 6 %}
+                <div class="faq-item">
+                    <button class="faq-header-btn" onclick="toggleFAQ(this)">
+                        <span class="faq-question">{{ faq.pergunta }}</span>
+                        <span class="faq-toggle-icon">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <div class="faq-answer">
+                            {{ faq.resposta }}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- Producers Category -->
+        <div class="faq-category">
+            <h2 class="faq-category-title">👨‍🌾 Para Produtores</h2>
+
+            {% for faq in faqs %}
+                {% if faq.id >= 7 and faq.id <= 8 %}
+                <div class="faq-item">
+                    <button class="faq-header-btn" onclick="toggleFAQ(this)">
+                        <span class="faq-question">{{ faq.pergunta }}</span>
+                        <span class="faq-toggle-icon">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <div class="faq-answer">
+                            {{ faq.resposta }}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="cta-section">
+        <h2>Não encontrou a resposta?</h2>
+        <p>Estamos aqui para ajudar! Entre em contato conosco.</p>
+        <a href="{{ url_for('institucional.contato') }}" class="btn-cta">
+            <i class="bi bi-envelope"></i> Enviar uma Mensagem
+        </a>
+    </div>
+</div>
+
+<script>
+    function toggleFAQ(button) {
+        // Fechar todos os outros FAQs
+        document.querySelectorAll('.faq-header-btn').forEach(btn => {
+            if (btn !== button) {
+                btn.classList.remove('active');
+                btn.nextElementSibling.classList.remove('active');
+            }
+        });
+
+        // Alternar o FAQ clicado
+        button.classList.toggle('active');
+        button.nextElementSibling.classList.toggle('active');
+    }
+
+    // Busca de FAQ
+    document.getElementById('faqSearch').addEventListener('keyup', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const faqItems = document.querySelectorAll('.faq-item');
+        let visibleCount = 0;
+
+        faqItems.forEach(item => {
+            const question = item.querySelector('.faq-question').textContent.toLowerCase();
+            const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
+
+            if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+                item.style.display = 'block';
+                visibleCount++;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+
+        // Mostrar mensagem se nenhum resultado
+        if (visibleCount === 0 && searchTerm !== '') {
+            console.log('Nenhum resultado encontrado');
+        }
+    });
+
+    // Fechar FAQ ao clicar em outro lugar (opcional)
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.faq-item')) {
+            // Remover apenas se clicar fora
+        }
+    });
+</script>
+
+{% endblock %}

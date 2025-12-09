@@ -1,0 +1,424 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+<style>
+    .blog-header {
+        background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        color: white;
+        padding: 50px 0;
+        margin-bottom: 50px;
+    }
+
+    .blog-header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .blog-header p {
+        font-size: 1.1rem;
+        opacity: 0.95;
+    }
+
+    .blog-search {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 40px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+
+    .blog-search input {
+        width: 100%;
+        padding: 12px 20px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s;
+    }
+
+    .blog-search input:focus {
+        outline: none;
+        border-color: #2ecc71;
+        box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.1);
+    }
+
+    .blog-layout {
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        gap: 40px;
+        margin-bottom: 60px;
+    }
+
+    .blog-posts {
+        display: grid;
+        gap: 30px;
+    }
+
+    .blog-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+        display: grid;
+        grid-template-columns: 250px 1fr;
+    }
+
+    .blog-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(46, 204, 113, 0.15);
+    }
+
+    .blog-image {
+        background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        overflow: hidden;
+    }
+
+    .blog-content {
+        padding: 25px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .blog-category {
+        display: inline-block;
+        background: rgba(46, 204, 113, 0.2);
+        color: #2ecc71;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+        width: fit-content;
+    }
+
+    .blog-title {
+        color: #27ae60;
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+        line-height: 1.4;
+    }
+
+    .blog-card:hover .blog-title {
+        color: #2ecc71;
+    }
+
+    .blog-excerpt {
+        color: #666;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 15px;
+        flex-grow: 1;
+    }
+
+    .blog-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 15px;
+        border-top: 1px solid #eee;
+        color: #999;
+        font-size: 0.9rem;
+    }
+
+    .blog-date {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .blog-read-more {
+        color: #2ecc71;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .blog-read-more:hover {
+        color: #27ae60;
+        gap: 10px;
+    }
+
+    /* Sidebar */
+    .blog-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .sidebar-box {
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
+
+    .sidebar-title {
+        color: #27ae60;
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 3px solid #2ecc71;
+    }
+
+    .sidebar-category {
+        padding: 12px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .sidebar-category:last-child {
+        border-bottom: none;
+    }
+
+    .sidebar-category a {
+        color: #666;
+        text-decoration: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s;
+    }
+
+    .sidebar-category a:hover {
+        color: #2ecc71;
+        padding-left: 10px;
+    }
+
+    .category-count {
+        background: #2ecc71;
+        color: white;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .sidebar-post {
+        padding: 15px;
+        margin-bottom: 15px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        border-left: 4px solid #2ecc71;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+
+    .sidebar-post:last-child {
+        margin-bottom: 0;
+    }
+
+    .sidebar-post:hover {
+        background: #e8f5e9;
+        transform: translateX(5px);
+    }
+
+    .sidebar-post h6 {
+        color: #27ae60;
+        font-weight: 700;
+        margin-bottom: 8px;
+        line-height: 1.3;
+    }
+
+    .sidebar-post p {
+        color: #999;
+        font-size: 0.8rem;
+        margin: 0;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #999;
+    }
+
+    .empty-state-icon {
+        font-size: 4rem;
+        margin-bottom: 20px;
+    }
+
+    @media (max-width: 992px) {
+        .blog-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .blog-card {
+            grid-template-columns: 200px 1fr;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .blog-header h1 {
+            font-size: 1.8rem;
+        }
+
+        .blog-card {
+            grid-template-columns: 1fr;
+        }
+
+        .blog-image {
+            height: 250px;
+        }
+    }
+</style>
+
+<!-- Header -->
+<section class="blog-header">
+    <div class="container">
+        <h1>Blog CoopVale</h1>
+        <p>Receitas, dicas e educação para uma vida mais saudável</p>
+    </div>
+</section>
+
+<div class="container">
+    <!-- Search -->
+    <div class="blog-search">
+        <input type="text" id="blog-search" placeholder="🔍 Pesquise por receitas, dicas e mais...">
+    </div>
+
+    <!-- Main Content -->
+    <div class="blog-layout">
+        <div class="blog-posts">
+            {% if posts %}
+                {% for post in posts %}
+                <div class="blog-card">
+                    <div class="blog-image">
+                        {% if 'Suco' in post.titulo %}🧃{% elif 'Pão' in post.titulo %}🍞{% elif 'Frutas' in post.titulo %}🍎{% elif 'Organicos' in post.titulo %}🥬{% elif 'Conservacao' in post.titulo %}🫙{% elif 'Sazonalidade' in post.titulo %}📅{% else %}📰{% endif %}
+                    </div>
+                    <div class="blog-content">
+                        <span class="blog-category">
+                            <i class="bi bi-tag"></i> {{ post.categoria }}
+                        </span>
+                        <h3 class="blog-title">{{ post.titulo }}</h3>
+                        <p class="blog-excerpt">{{ post.resumo }}</p>
+                        <div class="blog-meta">
+                            <div class="blog-date">
+                                <i class="bi bi-calendar"></i>
+                                {{ post.data }}
+                            </div>
+                            <a href="{{ url_for('institucional.blog_detalhes', post_id=post.id) }}" class="blog-read-more">
+                                Ler Mais <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-state-icon">📝</div>
+                <p>Nenhum post no blog ainda. Volte em breve para receitas e dicas!</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Sidebar -->
+        <div class="blog-sidebar">
+            <!-- Categories -->
+            <div class="sidebar-box">
+                <div class="sidebar-title">
+                    <i class="bi bi-list"></i> Categorias
+                </div>
+                <div class="sidebar-category">
+                    <a href="#" onclick="filterByCategory('Receita')">
+                        <span>Receitas</span>
+                        <span class="category-count">2</span>
+                    </a>
+                </div>
+                <div class="sidebar-category">
+                    <a href="#" onclick="filterByCategory('Dicas')">
+                        <span>Dicas</span>
+                        <span class="category-count">2</span>
+                    </a>
+                </div>
+                <div class="sidebar-category">
+                    <a href="#" onclick="filterByCategory('Saúde')">
+                        <span>Saúde</span>
+                        <span class="category-count">1</span>
+                    </a>
+                </div>
+                <div class="sidebar-category">
+                    <a href="#" onclick="filterByCategory('Educação')">
+                        <span>Educação</span>
+                        <span class="category-count">1</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Destaque -->
+            <div class="sidebar-box">
+                <div class="sidebar-title">
+                    <i class="bi bi-star"></i> Posts em Destaque
+                </div>
+                <a href="#" class="sidebar-post">
+                    <h6>Receita: Suco natural de abóbora e gengibre</h6>
+                    <p>Uma receita deliciosa e saudável</p>
+                </a>
+                <a href="#" class="sidebar-post">
+                    <h6>Benefícios dos alimentos orgânicos</h6>
+                    <p>Para uma vida mais saudável</p>
+                </a>
+                <a href="#" class="sidebar-post">
+                    <h6>Conservação de alimentos</h6>
+                    <p>Técnicas ancestrais</p>
+                </a>
+            </div>
+
+            <!-- Newsletter -->
+            <div class="sidebar-box" style="background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); color: white;">
+                <div class="sidebar-title" style="color: white; border-bottom-color: rgba(255,255,255,0.3);">
+                    <i class="bi bi-envelope"></i> Newsletter
+                </div>
+                <p style="color: rgba(255,255,255,0.9); margin-bottom: 15px; font-size: 0.95rem;">
+                    Receba receitas e dicas semanais direto no seu email
+                </p>
+                <input type="email" placeholder="Seu email..." style="width: 100%; padding: 10px 15px; border: none; border-radius: 8px; margin-bottom: 10px;">
+                <button style="width: 100%; padding: 10px 15px; background: white; color: #27ae60; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                    Inscrever
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function filterByCategory(category) {
+        const cards = document.querySelectorAll('.blog-card');
+        cards.forEach(card => {
+            const catElement = card.querySelector('.blog-category');
+            if (catElement && catElement.textContent.includes(category)) {
+                card.style.display = 'grid';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    // Search functionality
+    document.getElementById('blog-search').addEventListener('keyup', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const cards = document.querySelectorAll('.blog-card');
+
+        cards.forEach(card => {
+            const title = card.querySelector('.blog-title').textContent.toLowerCase();
+            const excerpt = card.querySelector('.blog-excerpt').textContent.toLowerCase();
+
+            if (title.includes(searchTerm) || excerpt.includes(searchTerm)) {
+                card.style.display = 'grid';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+</script>
+
+{% endblock %}

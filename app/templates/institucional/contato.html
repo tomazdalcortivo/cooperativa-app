@@ -1,0 +1,512 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+<style>
+    .contato-header {
+        background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        color: white;
+        padding: 50px 0;
+        margin-bottom: 50px;
+    }
+
+    .contato-header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .contato-header p {
+        font-size: 1.1rem;
+        opacity: 0.95;
+    }
+
+    .contato-layout {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 40px;
+        margin-bottom: 60px;
+    }
+
+    .contato-form {
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-group label {
+        display: block;
+        color: #27ae60;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-family: inherit;
+        transition: all 0.3s;
+        resize: vertical;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #2ecc71;
+        box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.1);
+    }
+
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #2ecc71;
+        box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.1);
+    }
+
+    .form-group select:focus {
+        outline: none;
+        border-color: #2ecc71;
+        box-shadow: 0 0 0 4px rgba(46, 204, 113, 0.1);
+    }
+
+    .form-group textarea {
+        min-height: 150px;
+    }
+
+    .form-group.inline {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .form-group.inline > div {
+        margin-bottom: 0;
+    }
+
+    .btn-submit {
+        background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        color: white;
+        padding: 14px 30px;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        width: 100%;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(46, 204, 113, 0.3);
+    }
+
+    .btn-submit:active {
+        transform: translateY(0);
+    }
+
+    /* Sidebar */
+    .contato-info {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    .info-box {
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        border-left: 4px solid #2ecc71;
+    }
+
+    .info-box-title {
+        color: #27ae60;
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .info-box-title i {
+        font-size: 1.5rem;
+        color: #2ecc71;
+    }
+
+    .info-box p {
+        color: #666;
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    .info-box a {
+        color: #2ecc71;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+    .info-box a:hover {
+        color: #27ae60;
+    }
+
+    .social-links {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .social-btn {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        color: white;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+    .social-facebook {
+        background: #1877f2;
+    }
+
+    .social-facebook:hover {
+        background: #0a66c2;
+        transform: translateY(-3px);
+    }
+
+    .social-instagram {
+        background: #e4405f;
+    }
+
+    .social-instagram:hover {
+        background: #c6337c;
+        transform: translateY(-3px);
+    }
+
+    .social-whatsapp {
+        background: #25d366;
+    }
+
+    .social-whatsapp:hover {
+        background: #1fa857;
+        transform: translateY(-3px);
+    }
+
+    .social-email {
+        background: #666;
+    }
+
+    .social-email:hover {
+        background: #444;
+        transform: translateY(-3px);
+    }
+
+    .hours-box {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 15px;
+    }
+
+    .hours-item {
+        display: flex;
+        justify-content: space-between;
+        color: #666;
+        font-size: 0.9rem;
+        padding: 8px 0;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .hours-item:last-child {
+        border-bottom: none;
+    }
+
+    .hours-item strong {
+        color: #27ae60;
+    }
+
+    /* Map Section */
+    .map-section {
+        background: #f8f9fa;
+        padding: 60px 0;
+        margin-top: 60px;
+    }
+
+    .map-container {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        height: 400px;
+    }
+
+    .map-placeholder {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #e8f5e9 0%, #f1f8f6 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        color: #2ecc71;
+    }
+
+    .map-placeholder i {
+        font-size: 4rem;
+        margin-bottom: 15px;
+    }
+
+    .map-placeholder p {
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    /* Success Message */
+    .success-message {
+        background: #d4edda;
+        color: #155724;
+        border: 2px solid #28a745;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        display: none;
+    }
+
+    .success-message.show {
+        display: block;
+        animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+        from {
+            transform: translateY(-20px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    @media (max-width: 992px) {
+        .contato-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .contato-header h1 {
+            font-size: 2rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .form-group.inline {
+            grid-template-columns: 1fr;
+        }
+
+        .map-container {
+            height: 300px;
+        }
+    }
+</style>
+
+<!-- Header -->
+<section class="contato-header">
+    <div class="container">
+        <h1>Entre em Contato</h1>
+        <p>Estamos aqui para responder suas dúvidas e sugestões</p>
+    </div>
+</section>
+
+<div class="container">
+    <!-- Success Message -->
+    <div class="success-message" id="successMessage">
+        <i class="bi bi-check-circle"></i> Mensagem enviada com sucesso! Entraremos em contato em breve.
+    </div>
+
+    <!-- Main Content -->
+    <div class="contato-layout">
+        <!-- Form -->
+        <form class="contato-form" id="contatoForm" method="POST">
+            <h2 style="color: #27ae60; margin-bottom: 30px;">Envie uma Mensagem</h2>
+
+            <div class="form-group inline">
+                <div>
+                    <label for="nome">Nome *</label>
+                    <input type="text" id="nome" name="nome" placeholder="Seu nome completo" required>
+                </div>
+                <div>
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" name="email" placeholder="seu@email.com" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="telefone">Telefone</label>
+                <input type="tel" id="telefone" name="telefone" placeholder="(XX) XXXXX-XXXX">
+            </div>
+
+            <div class="form-group">
+                <label for="assunto">Assunto *</label>
+                <select id="assunto" name="assunto" required>
+                    <option value="">Selecione um assunto...</option>
+                    <option value="Dúvida sobre produtos">Dúvida sobre produtos</option>
+                    <option value="Sugestão de produto">Sugestão de produto</option>
+                    <option value="Problema com pedido">Problema com pedido</option>
+                    <option value="Sugestão ou feedback">Sugestão ou feedback</option>
+                    <option value="Parcerias">Parcerias</option>
+                    <option value="Outros">Outros</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="mensagem">Mensagem *</label>
+                <textarea id="mensagem" name="mensagem" placeholder="Sua mensagem aqui..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit">
+                <i class="bi bi-send"></i> Enviar Mensagem
+            </button>
+
+            <p style="color: #999; font-size: 0.9rem; margin-top: 15px; text-align: center;">
+                * Campos obrigatórios
+            </p>
+        </form>
+
+        <!-- Info -->
+        <div class="contato-info">
+            <!-- Telefone -->
+            <div class="info-box">
+                <div class="info-box-title">
+                    <i class="bi bi-telephone"></i> Telefone
+                </div>
+                <p>
+                    <a href="tel:+551133334444">(11) 3333-4444</a>
+                    <br>
+                    <small style="color: #999;">Seg-Sex: 09h-18h</small>
+                </p>
+            </div>
+
+            <!-- Email -->
+            <div class="info-box">
+                <div class="info-box-title">
+                    <i class="bi bi-envelope"></i> Email
+                </div>
+                <p>
+                    <a href="mailto:contato@coopvale.com">contato@coopvale.com</a>
+                    <br>
+                    <small style="color: #999;">Respondemos em até 24h</small>
+                </p>
+            </div>
+
+            <!-- Endereço -->
+            <div class="info-box">
+                <div class="info-box-title">
+                    <i class="bi bi-geo-alt"></i> Endereço
+                </div>
+                <p>
+                    Rua das Flores, 123<br>
+                    Bairro do Vale<br>
+                    São Paulo, SP 01234-567<br>
+                    <small style="color: #999;">Brasil</small>
+                </p>
+            </div>
+
+            <!-- Horários -->
+            <div class="info-box">
+                <div class="info-box-title">
+                    <i class="bi bi-clock"></i> Horário de Atendimento
+                </div>
+                <div class="hours-box">
+                    <div class="hours-item">
+                        <strong>Segunda a Sexta:</strong>
+                        <span>09h - 18h</span>
+                    </div>
+                    <div class="hours-item">
+                        <strong>Sábado:</strong>
+                        <span>09h - 13h</span>
+                    </div>
+                    <div class="hours-item">
+                        <strong>Domingo:</strong>
+                        <span>Fechado</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Redes Sociais -->
+            <div class="info-box">
+                <div class="info-box-title">
+                    <i class="bi bi-share"></i> Redes Sociais
+                </div>
+                <div class="social-links">
+                    <a href="#" class="social-btn social-facebook" title="Facebook">
+                        <i class="bi bi-facebook"></i>
+                    </a>
+                    <a href="#" class="social-btn social-instagram" title="Instagram">
+                        <i class="bi bi-instagram"></i>
+                    </a>
+                    <a href="#" class="social-btn social-whatsapp" title="WhatsApp">
+                        <i class="bi bi-whatsapp"></i>
+                    </a>
+                    <a href="#" class="social-btn social-email" title="Email">
+                        <i class="bi bi-envelope"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Map Section -->
+<section class="map-section">
+    <div class="container">
+        <h2 style="text-align: center; color: #27ae60; margin-bottom: 40px; font-size: 2rem;">
+            <i class="bi bi-map"></i> Nos Visite
+        </h2>
+        <div class="map-container">
+            <div class="map-placeholder">
+                <i class="bi bi-geo-alt"></i>
+                <p>Mapa interativo aqui</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.getElementById('contatoForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Aqui você pode enviar via AJAX
+        const formData = new FormData(this);
+
+        fetch('{{ url_for("institucional.contato") }}', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('successMessage').classList.add('show');
+                document.getElementById('contatoForm').reset();
+
+                setTimeout(() => {
+                    document.getElementById('successMessage').classList.remove('show');
+                }, 5000);
+            }
+        });
+    });
+</script>
+
+{% endblock %}

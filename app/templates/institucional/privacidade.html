@@ -1,0 +1,288 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+<style>
+    .legal-header {
+        background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        color: white;
+        padding: 50px 0;
+        margin-bottom: 50px;
+    }
+
+    .legal-header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .legal-content {
+        max-width: 900px;
+        margin: 0 auto 60px;
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    }
+
+    .legal-section {
+        margin-bottom: 40px;
+    }
+
+    .legal-section h2 {
+        color: #27ae60;
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 3px solid #2ecc71;
+    }
+
+    .legal-section h3 {
+        color: #2ecc71;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-top: 20px;
+        margin-bottom: 12px;
+    }
+
+    .legal-section p {
+        color: #666;
+        line-height: 1.8;
+        margin-bottom: 15px;
+        font-size: 1rem;
+    }
+
+    .legal-section ul,
+    .legal-section ol {
+        margin-left: 25px;
+        margin-bottom: 15px;
+    }
+
+    .legal-section li {
+        color: #666;
+        line-height: 1.8;
+        margin-bottom: 10px;
+    }
+
+    .highlight {
+        background: rgba(46, 204, 113, 0.1);
+        border-left: 4px solid #2ecc71;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 5px;
+    }
+
+    .highlight strong {
+        color: #27ae60;
+    }
+
+    .last-updated {
+        color: #999;
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .back-link {
+        text-align: center;
+        padding: 40px 0;
+    }
+
+    .back-link a {
+        display: inline-block;
+        color: #2ecc71;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+    .back-link a:hover {
+        color: #27ae60;
+        gap: 10px;
+    }
+
+    @media (max-width: 768px) {
+        .legal-header h1 {
+            font-size: 1.8rem;
+        }
+
+        .legal-content {
+            padding: 20px;
+        }
+
+        .legal-section h2 {
+            font-size: 1.3rem;
+        }
+    }
+</style>
+
+<!-- Header -->
+<section class="legal-header">
+    <div class="container">
+        <h1>Política de Privacidade</h1>
+        <p>Saiba como protegemos seus dados</p>
+    </div>
+</section>
+
+<div class="container">
+    <div class="legal-content">
+        <div class="last-updated">
+            <strong>Última atualização:</strong> 8 de dezembro de 2025
+        </div>
+
+        <!-- Introduction -->
+        <div class="legal-section">
+            <h2>Introdução</h2>
+            <p>
+                A CoopVale ("nós", "nos", "nosso" ou "Empresa") opera o site coopvale.com.br (o "Site"). 
+                Esta página informa sobre nossas políticas quanto à coleta, uso e divulgação de dados pessoais 
+                quando você utiliza nosso Site, bem como as opções de privacidade associadas.
+            </p>
+            <p>
+                Usamos seus dados para fornecer e melhorar o Site. Ao usar o Site, você concorda com a coleta 
+                e uso de informações de acordo com esta política.
+            </p>
+        </div>
+
+        <!-- Collection of Data -->
+        <div class="legal-section">
+            <h2>Coleta e Uso de Dados</h2>
+            <h3>Tipos de Dados Coletados</h3>
+            <ul>
+                <li><strong>Dados de Conta:</strong> Nome, email, senha, endereço, telefone</li>
+                <li><strong>Dados de Transação:</strong> Informações sobre pedidos, pagamentos e histórico de compras</li>
+                <li><strong>Dados de Navegação:</strong> Endereço IP, tipo de navegador, páginas visitadas, hora das visitas</li>
+                <li><strong>Dados de Comunicação:</strong> Mensagens enviadas através do formulário de contato</li>
+                <li><strong>Dados Opcionais:</strong> Comentários, avaliações e feedback (quando fornecidos voluntariamente)</li>
+            </ul>
+
+            <h3>Como Usamos Seus Dados</h3>
+            <ul>
+                <li>Para processar e gerenciar suas transações e pedidos</li>
+                <li>Para enviar notificações sobre seus pedidos e promoções</li>
+                <li>Para responder suas solicitações e mensagens de contato</li>
+                <li>Para melhorar a qualidade do nosso Site e serviços</li>
+                <li>Para cumprir com obrigações legais e regulatórias</li>
+                <li>Para prevenir fraudes e atividades ilegais</li>
+                <li>Para análise de dados e pesquisa de mercado</li>
+            </ul>
+        </div>
+
+        <!-- Security -->
+        <div class="legal-section">
+            <h2>Segurança de Dados</h2>
+            <p>
+                A segurança de seus dados é importante para nós, mas lembre-se que nenhum método de transmissão 
+                pela Internet ou eletrônico de armazenamento é 100% seguro. Embora nos esforcemos para usar meios 
+                comercialmente aceitáveis para proteger seus dados pessoais, não podemos garantir sua segurança absoluta.
+            </p>
+            <div class="highlight">
+                <strong>🔒 Proteção:</strong> Utilizamos criptografia SSL (Secure Socket Layer) para proteger 
+                informações sensíveis como dados de cartão de crédito durante a transmissão.
+            </div>
+        </div>
+
+        <!-- Sharing of Information -->
+        <div class="legal-section">
+            <h2>Compartilhamento de Informações</h2>
+            <p>
+                Não vendemos, comercializamos ou transferimos seus dados pessoais identificáveis a terceiros. 
+                Isso não inclui parceiros confiáveis que nos ajudam a operar nosso Site, desde que essas partes 
+                concordem em manter essas informações confidenciais.
+            </p>
+            <p>
+                Podemos divulgar suas informações quando exigido por lei ou quando, em boa fé, acreditamos que 
+                tal ação é necessária para:
+            </p>
+            <ul>
+                <li>Cumprir com as exigências legais</li>
+                <li>Proteger e defender nossos direitos e propriedade</li>
+                <li>Proteger a segurança pessoal dos usuários</li>
+                <li>Investigar potenciais fraudes</li>
+            </ul>
+        </div>
+
+        <!-- Cookies -->
+        <div class="legal-section">
+            <h2>Cookies</h2>
+            <p>
+                Usamos cookies para aprimorar sua experiência no nosso Site. Os cookies são pequenos arquivos 
+                que um site ou seu provedor de serviços coloca em seu computador através do seu navegador web 
+                (se você permitir).
+            </p>
+            <h3>Tipos de Cookies que Usamos</h3>
+            <ul>
+                <li><strong>Cookies Essenciais:</strong> Necessários para o funcionamento básico do site</li>
+                <li><strong>Cookies de Desempenho:</strong> Coletam informações sobre como você usa nosso site</li>
+                <li><strong>Cookies de Funcionalidade:</strong> Lembram suas preferências e escolhas</li>
+                <li><strong>Cookies de Marketing:</strong> Usados para rastrear visitantes em vários sites</li>
+            </ul>
+        </div>
+
+        <!-- User Rights -->
+        <div class="legal-section">
+            <h2>Seus Direitos de Privacidade</h2>
+            <p>
+                De acordo com as leis de proteção de dados, você tem os seguintes direitos:
+            </p>
+            <ul>
+                <li><strong>Direito de Acesso:</strong> Você pode solicitar e receber uma cópia de seus dados pessoais</li>
+                <li><strong>Direito de Retificação:</strong> Você pode corrigir informações imprecisas</li>
+                <li><strong>Direito de Exclusão:</strong> Você pode solicitar a exclusão de seus dados (com certas exceções legais)</li>
+                <li><strong>Direito à Portabilidade:</strong> Você pode solicitar uma cópia de seus dados em formato portável</li>
+                <li><strong>Direito de Oposição:</strong> Você pode se opor ao processamento de seus dados para fins específicos</li>
+            </ul>
+            <p>
+                Para exercer qualquer desses direitos, entre em contato conosco em contato@coopvale.com
+            </p>
+        </div>
+
+        <!-- Links to Other Sites -->
+        <div class="legal-section">
+            <h2>Links para Outros Sites</h2>
+            <p>
+                Nosso Site pode conter links para sites de terceiros. Se você clicar em um link de terceiros, 
+                será direcionado para esse site. Note que não somos responsáveis pela política de privacidade ou 
+                conteúdo desses sites externos.
+            </p>
+            <p>
+                Recomendamos que você revise a política de privacidade de qualquer site antes de fornecer dados pessoais.
+            </p>
+        </div>
+
+        <!-- Changes to This Privacy Policy -->
+        <div class="legal-section">
+            <h2>Alterações a Esta Política de Privacidade</h2>
+            <p>
+                Podemos atualizar esta Política de Privacidade de tempos em tempos. Notificaremos você sobre 
+                alterações postando a nova Política de Privacidade nesta página.
+            </p>
+            <p>
+                Recomendamos que você revise esta Política de Privacidade periodicamente para estar ciente de 
+                quaisquer mudanças. As alterações a esta Política de Privacidade entram em vigor quando publicadas nesta página.
+            </p>
+        </div>
+
+        <!-- Contact Us -->
+        <div class="legal-section">
+            <h2>Entre em Contato Conosco</h2>
+            <p>
+                Se você tiver dúvidas sobre esta Política de Privacidade, entre em contato conosco em:
+            </p>
+            <div class="highlight">
+                <strong>Email:</strong> contato@coopvale.com<br>
+                <strong>Telefone:</strong> (11) 3333-4444<br>
+                <strong>Endereço:</strong> Rua das Flores, 123, Bairro do Vale, São Paulo, SP 01234-567
+            </div>
+        </div>
+    </div>
+
+    <div class="back-link">
+        <a href="/">
+            <i class="bi bi-arrow-left"></i> Voltar ao Início
+        </a>
+    </div>
+</div>
+
+{% endblock %}

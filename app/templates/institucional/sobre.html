@@ -1,0 +1,455 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+<style>
+    .breadcrumb-section {
+        background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        color: white;
+        padding: 40px 0;
+        margin-bottom: 40px;
+    }
+
+    .page-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .page-subtitle {
+        font-size: 1.1rem;
+        opacity: 0.95;
+    }
+
+    .timeline {
+        position: relative;
+        padding: 20px 0;
+    }
+
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(to bottom, #2ecc71, #27ae60);
+    }
+
+    .timeline-item {
+        margin-bottom: 50px;
+        position: relative;
+    }
+
+    .timeline-item:nth-child(odd) {
+        text-align: right;
+        padding-right: 55%;
+    }
+
+    .timeline-item:nth-child(even) {
+        text-align: left;
+        padding-left: 55%;
+    }
+
+    .timeline-dot {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 20px;
+        height: 20px;
+        background: #2ecc71;
+        border: 4px solid white;
+        border-radius: 50%;
+        top: 30px;
+        box-shadow: 0 0 0 4px #2ecc71;
+        z-index: 1;
+    }
+
+    .timeline-content {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        border-left: 4px solid #2ecc71;
+    }
+
+    .timeline-item:nth-child(even) .timeline-content {
+        border-left: none;
+        border-right: 4px solid #2ecc71;
+    }
+
+    .timeline-year {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #27ae60;
+        margin-bottom: 8px;
+    }
+
+    .timeline-text {
+        color: #666;
+        line-height: 1.6;
+    }
+
+    .section-content {
+        padding: 60px 0;
+    }
+
+    .section-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #27ae60;
+        margin-bottom: 30px;
+        position: relative;
+        padding-bottom: 15px;
+    }
+
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(90deg, #2ecc71, #27ae60);
+        border-radius: 2px;
+    }
+
+    .mission-vision-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        margin-top: 40px;
+    }
+
+    .mission-card,
+    .vision-card {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e8f5e9 100%);
+        padding: 30px;
+        border-radius: 15px;
+        border-left: 5px solid #2ecc71;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
+
+    .mission-card h3,
+    .vision-card h3 {
+        color: #27ae60;
+        font-weight: 700;
+        margin-bottom: 15px;
+        font-size: 1.5rem;
+    }
+
+    .mission-card p,
+    .vision-card p {
+        color: #666;
+        line-height: 1.8;
+        margin: 0;
+    }
+
+    .values-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+    }
+
+    .value-item {
+        text-align: center;
+        padding: 30px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+    }
+
+    .value-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(46, 204, 113, 0.2);
+    }
+
+    .value-icon {
+        font-size: 3rem;
+        color: #2ecc71;
+        margin-bottom: 15px;
+    }
+
+    .value-item h4 {
+        color: #27ae60;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .value-item p {
+        color: #666;
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    .team-section {
+        background: #f8f9fa;
+        padding: 60px 0;
+        margin-top: 60px;
+    }
+
+    .team-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 40px;
+        margin-top: 40px;
+    }
+
+    .team-member {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+
+    .team-member:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(46, 204, 113, 0.2);
+    }
+
+    .team-image {
+        width: 100%;
+        height: 250px;
+        background: linear-gradient(135deg, #456e57 0%, #27ae60 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4rem;
+        color: white;
+    }
+
+    .team-info {
+        padding: 20px;
+        text-align: center;
+    }
+
+    .team-info h5 {
+        color: #27ae60;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    .team-info p {
+        color: #666;
+        margin: 0;
+        font-size: 0.95rem;
+    }
+
+    @media (max-width: 768px) {
+        .timeline::before {
+            left: 0;
+        }
+
+        .timeline-item {
+            padding-left: 50px !important;
+            text-align: left !important;
+        }
+
+        .timeline-dot {
+            left: 0;
+        }
+
+        .timeline-item:nth-child(odd),
+        .timeline-item:nth-child(even) {
+            padding-right: 0 !important;
+            padding-left: 50px !important;
+            text-align: left !important;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            border-right: none;
+            border-left: 4px solid #2ecc71;
+        }
+
+        .mission-vision-grid {
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        .page-title {
+            font-size: 1.8rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+
+<!-- Page Header -->
+<section class="breadcrumb-section">
+    <div class="container">
+        <h1 class="page-title">Sobre Nós</h1>
+        <p class="page-subtitle">Conheça a história e os valores da CoopVale</p>
+    </div>
+</section>
+
+<!-- Main Content -->
+<div class="container">
+    <!-- Introduction -->
+    <section class="section-content">
+        <h2 class="section-title">Nossa História</h2>
+        <p style="font-size: 1.1rem; line-height: 1.8; color: #666; margin-bottom: 20px;">
+            A CoopVale nasceu da visão de conectar pequenos produtores rurais com consumidores que valorizam qualidade, 
+            sustentabilidade e responsabilidade social. Desde nossas primeiras operações, nos dedicamos a criar um 
+            ecossistema justo que beneficia tanto os produtores quanto os consumidores.
+        </p>
+        <p style="font-size: 1.1rem; line-height: 1.8; color: #666;">
+            Com mais de uma década de experiência no setor, evoluímos de uma cooperativa local para uma referência 
+            regional em produtos orgânicos de qualidade. Nosso compromisso com a excelência nunca mudou.
+        </p>
+    </section>
+
+    <!-- Timeline -->
+    <section class="section-content">
+        <h2 class="section-title">Nossa Trajetória</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">2015</div>
+                    <div class="timeline-text">Fundação da CoopVale com 5 produtores pioneiros</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">2016</div>
+                    <div class="timeline-text">Primeira certificação orgânica e parceria com marketplace</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">2018</div>
+                    <div class="timeline-text">Expansão para 15 produtores e 500+ clientes ativos</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">2020</div>
+                    <div class="timeline-text">Lançamento de nossa plataforma e-commerce própria</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">2022</div>
+                    <div class="timeline-text">Atingimos 50 produtores e 5.000 clientes cadastrados</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-year">2025</div>
+                    <div class="timeline-text">Consolidação como maior cooperativa orgânica da região</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission & Vision -->
+    <section class="section-content">
+        <h2 class="section-title">Nossa Missão e Visão</h2>
+        <div class="mission-vision-grid">
+            <div class="mission-card">
+                <h3><i class="bi bi-target"></i> Missão</h3>
+                <p>Conectar produtores rurais com consumidores conscientes, promovendo alimentos saudáveis, sustentáveis e de qualidade, enquanto gera renda justa e dignidade para o campo.</p>
+            </div>
+            <div class="vision-card">
+                <h3><i class="bi bi-eye"></i> Visão</h3>
+                <p>Ser a principal plataforma de comercialização de produtos orgânicos e sustentáveis da região, reconhecida pela qualidade, confiabilidade e impacto positivo na vida das famílias rurais.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Values -->
+    <section class="section-content">
+        <h2 class="section-title">Nossos Valores</h2>
+        <div class="values-grid">
+            <div class="value-item">
+                <div class="value-icon">🌱</div>
+                <h4>Sustentabilidade</h4>
+                <p>Comprometidos com práticas que preservam o meio ambiente para as futuras gerações.</p>
+            </div>
+            <div class="value-item">
+                <div class="value-icon">🤝</div>
+                <h4>Cooperação</h4>
+                <p>Acreditamos no poder da união e do trabalho coletivo para alcançar objetivos maiores.</p>
+            </div>
+            <div class="value-item">
+                <div class="value-icon">💯</div>
+                <h4>Qualidade</h4>
+                <p>Nunca comprometemos com a excelência em cada produto que chega até você.</p>
+            </div>
+            <div class="value-item">
+                <div class="value-icon">✊</div>
+                <h4>Justiça Social</h4>
+                <p>Garantimos preços justos e condições dignassaúde para todos os produtores.</p>
+            </div>
+            <div class="value-item">
+                <div class="value-icon">🔒</div>
+                <h4>Transparência</h4>
+                <p>Você sabe exatamente de onde vêm seus alimentos e quem os produziu.</p>
+            </div>
+            <div class="value-item">
+                <div class="value-icon">❤️</div>
+                <h4>Paixão</h4>
+                <p>Fazemos tudo com dedicação e amor pelo que acreditamos.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team-section">
+        <div class="container">
+            <h2 class="section-title">Nossa Equipe de Direção</h2>
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="team-image">👨‍💼</div>
+                    <div class="team-info">
+                        <h5>João Silva</h5>
+                        <p>Presidente e Fundador</p>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="team-image">👩‍💼</div>
+                    <div class="team-info">
+                        <h5>Maria Santos</h5>
+                        <p>Diretora Operacional</p>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="team-image">👨‍💼</div>
+                    <div class="team-info">
+                        <h5>Carlos Oliveira</h5>
+                        <p>Diretor de Qualidade</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="section-content">
+        <div class="text-center">
+            <h2 class="section-title" style="margin-bottom: 20px;">Faça Parte da CoopVale</h2>
+            <p style="font-size: 1.1rem; color: #666; margin-bottom: 30px;">
+                Junte-se a milhares de clientes que já confiam em nossos produtos
+            </p>
+            <a href="{{ url_for('produtos.listar_produtos') }}" class="btn btn-success btn-lg">
+                <i class="bi bi-shop"></i> Começar a Comprar
+            </a>
+        </div>
+    </section>
+</div>
+
+{% endblock %}

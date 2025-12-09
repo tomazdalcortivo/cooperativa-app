@@ -1,0 +1,411 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+<style>
+    .produtores-header {
+        background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        color: white;
+        padding: 50px 0;
+        margin-bottom: 50px;
+    }
+
+    .produtores-header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .produtores-header p {
+        font-size: 1.1rem;
+        opacity: 0.95;
+    }
+
+    .filter-section {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 40px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+
+    .filter-group {
+        margin-bottom: 15px;
+    }
+
+    .filter-group label {
+        font-weight: 600;
+        color: #27ae60;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .filter-group input,
+    .filter-group select {
+        width: 100%;
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+    }
+
+    .filter-group input:focus,
+    .filter-group select:focus {
+        outline: none;
+        border-color: #2ecc71;
+        box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.1);
+    }
+
+    .btn-filter {
+        background: #2ecc71;
+        color: white;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        width: 100%;
+    }
+
+    .btn-filter:hover {
+        background: #27ae60;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+    }
+
+    .btn-filter-reset {
+        background: #6c757d;
+        margin-top: 10px;
+    }
+
+    .btn-filter-reset:hover {
+        background: #5a6268;
+    }
+
+    .produtores-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 30px;
+        margin-bottom: 50px;
+    }
+
+    .produtor-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .produtor-card:hover {
+        transform: translateY(-12px);
+        box-shadow: 0 20px 50px rgba(46, 204, 113, 0.25);
+    }
+
+    .produtor-banner {
+        background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .produtor-banner::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.3)"/><circle cx="80" cy="30" r="2" fill="rgba(255,255,255,0.3)"/><circle cx="50" cy="70" r="2" fill="rgba(255,255,255,0.3)"/></svg>');
+        opacity: 0.5;
+    }
+
+    .produtor-banner span {
+        position: relative;
+        z-index: 1;
+    }
+
+    .produtor-info {
+        padding: 25px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .produtor-name {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #27ae60;
+        margin-bottom: 10px;
+    }
+
+    .produtor-especialidade {
+        color: #2ecc71;
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+        padding: 5px 10px;
+        background: rgba(46, 204, 113, 0.1);
+        border-radius: 20px;
+        display: inline-block;
+    }
+
+    .produtor-desc {
+        color: #666;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin-bottom: 15px;
+        flex-grow: 1;
+    }
+
+    .produtor-stats {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #eee;
+    }
+
+    .produtor-stat {
+        text-align: center;
+        flex: 1;
+    }
+
+    .produtor-stat-number {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #2ecc71;
+    }
+
+    .produtor-stat-label {
+        font-size: 0.8rem;
+        color: #999;
+        margin-top: 2px;
+    }
+
+    .produtor-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .produtor-actions a {
+        flex: 1;
+        padding: 10px;
+        text-align: center;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+
+    .btn-perfil {
+        background: #2ecc71;
+        color: white;
+        border: none;
+    }
+
+    .btn-perfil:hover {
+        background: #27ae60;
+    }
+
+    .btn-produtos {
+        background: transparent;
+        color: #2ecc71;
+        border: 2px solid #2ecc71;
+    }
+
+    .btn-produtos:hover {
+        background: #2ecc71;
+        color: white;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #999;
+    }
+
+    .empty-state-icon {
+        font-size: 4rem;
+        margin-bottom: 20px;
+    }
+
+    .empty-state p {
+        font-size: 1.1rem;
+        margin: 0;
+    }
+
+    @media (max-width: 768px) {
+        .produtores-header h1 {
+            font-size: 1.8rem;
+        }
+
+        .produtores-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .filter-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .filter-group {
+            margin-bottom: 0;
+        }
+
+        .btn-filter,
+        .btn-filter-reset {
+            grid-column: 1 / -1;
+        }
+    }
+</style>
+
+<!-- Header -->
+<section class="produtores-header">
+    <div class="container">
+        <h1>Conheça Nossos Produtores</h1>
+        <p>Pequenos agricultores, grandes histórias de sustentabilidade e qualidade</p>
+    </div>
+</section>
+
+<!-- Filter Section -->
+<div class="container">
+    <div class="filter-section">
+        <div class="row">
+            <div class="col-md-4 filter-group">
+                <label for="pesquisa">Pesquisar Produtor</label>
+                <input type="text" id="pesquisa" placeholder="Nome do produtor..." class="filter-input">
+            </div>
+            <div class="col-md-4 filter-group">
+                <label for="especialidade">Especialidade</label>
+                <select id="especialidade" class="filter-input">
+                    <option value="">Todos</option>
+                    <option value="Frutas">Frutas</option>
+                    <option value="Verduras">Verduras</option>
+                    <option value="Hortaliças">Hortaliças</option>
+                    <option value="Leite">Leite e Laticínios</option>
+                    <option value="Grãos">Grãos</option>
+                </select>
+            </div>
+            <div class="col-md-4 filter-group" style="display: flex; flex-direction: column; justify-content: flex-end;">
+                <button class="btn-filter">
+                    <i class="bi bi-search"></i> Filtrar
+                </button>
+                <button class="btn-filter btn-filter-reset">
+                    <i class="bi bi-arrow-counterclockwise"></i> Limpar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Produtores Grid -->
+    <div class="produtores-grid">
+        {% if produtores %}
+            {% for produtor in produtores %}
+            <div class="produtor-card">
+                <div class="produtor-banner">
+                    <span>🌾</span>
+                </div>
+                <div class="produtor-info">
+                    <div class="produtor-name">{{ produtor.nome }}</div>
+                    {% if produtor.especialidade %}
+                    <span class="produtor-especialidade">{{ produtor.especialidade }}</span>
+                    {% else %}
+                    <span class="produtor-especialidade">Produtor Local</span>
+                    {% endif %}
+                    <p class="produtor-desc">
+                        {{ produtor.descricao if produtor.descricao else 'Produtor comprometido com qualidade e sustentabilidade.' }}
+                    </p>
+                    
+                    <div class="produtor-stats">
+                        <div class="produtor-stat">
+                            <div class="produtor-stat-number">{{ produtor.produtos|length if produtor.produtos else '0' }}</div>
+                            <div class="produtor-stat-label">Produtos</div>
+                        </div>
+                        <div class="produtor-stat">
+                            <div class="produtor-stat-number">4.8</div>
+                            <div class="produtor-stat-label">Avaliação</div>
+                        </div>
+                        <div class="produtor-stat">
+                            <div class="produtor-stat-number">50+</div>
+                            <div class="produtor-stat-label">Vendas</div>
+                        </div>
+                    </div>
+
+                    <div class="produtor-actions">
+                        <a href="{{ url_for('produtor.ver_perfil') }}" class="btn-perfil">
+                            <i class="bi bi-person"></i> Ver Perfil
+                        </a>
+                        <a href="{{ url_for('produtos.listar_produtos') }}?produtor={{ produtor.id }}" class="btn-produtos">
+                            <i class="bi bi-shop"></i> Produtos
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <div class="col-12">
+            <div class="empty-state">
+                <div class="empty-state-icon">🌾</div>
+                <p>Nenhum produtor cadastrado ainda. Volte em breve!</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Call to Action -->
+    <div class="text-center" style="padding: 40px 0; margin-top: 40px; border-top: 1px solid #eee;">
+        <h3 style="color: #27ae60; margin-bottom: 20px;">Quer se juntar à CoopVale?</h3>
+        <p style="color: #666; margin-bottom: 20px; font-size: 1.1rem;">
+            Se você é produtor e quer vender seus produtos através da CoopVale, entraremos em contato com você!
+        </p>
+        <a href="{{ url_for('institucional.contato') }}" class="btn btn-success btn-lg">
+            <i class="bi bi-envelope"></i> Saiba Como Participar
+        </a>
+    </div>
+</div>
+
+<script>
+    // Filtro interativo (opcional)
+    document.querySelector('.btn-filter').addEventListener('click', function() {
+        const pesquisa = document.getElementById('pesquisa').value.toLowerCase();
+        const especialidade = document.getElementById('especialidade').value;
+        const cards = document.querySelectorAll('.produtor-card');
+
+        cards.forEach(card => {
+            const nome = card.querySelector('.produtor-name').textContent.toLowerCase();
+            const espec = card.querySelector('.produtor-especialidade').textContent;
+
+            const matchNome = nome.includes(pesquisa);
+            const matchEspec = especialidade === '' || espec.includes(especialidade);
+
+            card.style.display = (matchNome && matchEspec) ? 'flex' : 'none';
+        });
+    });
+
+    document.querySelector('.btn-filter-reset').addEventListener('click', function() {
+        document.getElementById('pesquisa').value = '';
+        document.getElementById('especialidade').value = '';
+        document.querySelectorAll('.produtor-card').forEach(card => {
+            card.style.display = 'flex';
+        });
+    });
+
+    // Busca em tempo real
+    document.getElementById('pesquisa').addEventListener('keyup', function() {
+        document.querySelector('.btn-filter').click();
+    });
+</script>
+
+{% endblock %}

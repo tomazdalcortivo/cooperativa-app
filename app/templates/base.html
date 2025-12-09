@@ -14,13 +14,19 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-success mb-4 shadow-sm">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="/">CoopVale 🚜</a>
+            <a class="navbar-brand fw-bold" href="{{ url_for('institucional.home') }}">CoopVale 🚜</a>
 
-            <div class="collapse navbar-collapse">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item"><a class="nav-link text-white" href="/">Início</a></li>
-                    <li class="nav-item"><a class="nav-link text-white"
-                            href="{{ url_for('produtos.listar_produtos') }}">Produtos</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('institucional.home') }}">Início</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('institucional.sobre') }}">Sobre Nós</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('institucional.produtores') }}">Produtores</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('institucional.blog') }}">Blog</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('produtos.listar_produtos') }}">Produtos</a></li>
 
                     {% if current_user.tipo_usuario == 'cliente' %}
                     <li class="nav-item">
@@ -81,8 +87,35 @@
         {% block conteudo %}{% endblock %}
     </div>
 
-    <footer class="bg-light text-center py-3 mt-5 border-top">
-        <p class="text-muted mb-0">© 2025 CoopVale - Sistema de Cooperativa Rural</p>
+    <footer class="bg-light text-center py-4 mt-5 border-top">
+        <div class="container">
+            <div class="row mb-4">
+                <div class="col-md-4 text-center">
+                    <h6 class="fw-bold text-success mb-2">Institucional</h6>
+                    <ul style="list-style: none; padding: 0;">
+                        <li><a href="{{ url_for('institucional.sobre') }}" class="text-muted text-decoration-none small">Sobre Nós</a></li>
+                        <li><a href="{{ url_for('institucional.produtores') }}" class="text-muted text-decoration-none small">Produtores</a></li>
+                        <li><a href="{{ url_for('institucional.blog') }}" class="text-muted text-decoration-none small">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 text-center">
+                    <h6 class="fw-bold text-success mb-2">Suporte</h6>
+                    <ul style="list-style: none; padding: 0;">
+                        <li><a href="{{ url_for('institucional.contato') }}" class="text-muted text-decoration-none small">Contato</a></li>
+                        <li><a href="{{ url_for('institucional.faq') }}" class="text-muted text-decoration-none small">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 text-center">
+                    <h6 class="fw-bold text-success mb-2">Legal</h6>
+                    <ul style="list-style: none; padding: 0;">
+                        <li><a href="{{ url_for('institucional.privacidade') }}" class="text-muted text-decoration-none small">Privacidade</a></li>
+                        <li><a href="{{ url_for('institucional.termos') }}" class="text-muted text-decoration-none small">Termos de Uso</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <p class="text-muted mb-0">© 2025 CoopVale - Sistema de Cooperativa Rural. Todos os direitos reservados.</p>
+        </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

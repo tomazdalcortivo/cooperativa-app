@@ -1,0 +1,330 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+<style>
+    .legal-header {
+        background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        color: white;
+        padding: 50px 0;
+        margin-bottom: 50px;
+    }
+
+    .legal-header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .legal-content {
+        max-width: 900px;
+        margin: 0 auto 60px;
+        background: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    }
+
+    .legal-section {
+        margin-bottom: 40px;
+    }
+
+    .legal-section h2 {
+        color: #27ae60;
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 3px solid #2ecc71;
+    }
+
+    .legal-section h3 {
+        color: #2ecc71;
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-top: 20px;
+        margin-bottom: 12px;
+    }
+
+    .legal-section p {
+        color: #666;
+        line-height: 1.8;
+        margin-bottom: 15px;
+        font-size: 1rem;
+    }
+
+    .legal-section ul,
+    .legal-section ol {
+        margin-left: 25px;
+        margin-bottom: 15px;
+    }
+
+    .legal-section li {
+        color: #666;
+        line-height: 1.8;
+        margin-bottom: 10px;
+    }
+
+    .highlight {
+        background: rgba(46, 204, 113, 0.1);
+        border-left: 4px solid #2ecc71;
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 5px;
+    }
+
+    .highlight strong {
+        color: #27ae60;
+    }
+
+    .last-updated {
+        color: #999;
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .back-link {
+        text-align: center;
+        padding: 40px 0;
+    }
+
+    .back-link a {
+        display: inline-block;
+        color: #2ecc71;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+    .back-link a:hover {
+        color: #27ae60;
+    }
+
+    @media (max-width: 768px) {
+        .legal-header h1 {
+            font-size: 1.8rem;
+        }
+
+        .legal-content {
+            padding: 20px;
+        }
+
+        .legal-section h2 {
+            font-size: 1.3rem;
+        }
+    }
+</style>
+
+<!-- Header -->
+<section class="legal-header">
+    <div class="container">
+        <h1>Termos de Uso</h1>
+        <p>Leia e compreenda nossas condições de serviço</p>
+    </div>
+</section>
+
+<div class="container">
+    <div class="legal-content">
+        <div class="last-updated">
+            <strong>Última atualização:</strong> 8 de dezembro de 2025
+        </div>
+
+        <!-- Introduction -->
+        <div class="legal-section">
+            <h2>1. Aceitação dos Termos</h2>
+            <p>
+                Ao acessar e usar o Site da CoopVale (coopvale.com.br), você concorda em ficar vinculado por 
+                estes Termos de Uso. Se você não concordar com qualquer parte destes termos, não use o Site.
+            </p>
+            <p>
+                A CoopVale se reserva o direito de modificar estes termos a qualquer momento. Seu uso continuado 
+                do Site após tais modificações constitui sua aceitação dos novos Termos de Uso.
+            </p>
+        </div>
+
+        <!-- License -->
+        <div class="legal-section">
+            <h2>2. Licença de Uso</h2>
+            <p>
+                A CoopVale concede a você uma licença limitada, revogável e não exclusiva para acessar e usar o Site 
+                para fins pessoais e não comerciais. Você não pode:
+            </p>
+            <ul>
+                <li>Reproduzir, distribuir, transmitir ou vender conteúdo do Site</li>
+                <li>Usar o Site para fins comerciais sem autorização expressa</li>
+                <li>Contornar ou desabilitar qualquer aspecto de segurança do Site</li>
+                <li>Colocar o Site em um frame ou janela de outro site</li>
+                <li>Acessar o Site através de qualquer meio automatizado ou não autorizado</li>
+            </ul>
+        </div>
+
+        <!-- User Accounts -->
+        <div class="legal-section">
+            <h2>3. Contas de Usuário</h2>
+            <h3>Registro</h3>
+            <p>
+                Para usar certos recursos do Site, você pode ser solicitado a criar uma conta. Você concorda em:
+            </p>
+            <ul>
+                <li>Fornecer informações precisas, completas e atualizadas</li>
+                <li>Manter a confidencialidade de sua senha</li>
+                <li>Ser responsável por todas as atividades em sua conta</li>
+                <li>Notificar-nos imediatamente sobre qualquer uso não autorizado</li>
+            </ul>
+
+            <h3>Responsabilidade</h3>
+            <p>
+                Você é responsável por todas as atividades que ocorrem em sua conta. A CoopVale não será responsável 
+                por qualquer perda ou dano resultante de sua falha em manter a confidencialidade de sua senha.
+            </p>
+        </div>
+
+        <!-- Acceptable Use -->
+        <div class="legal-section">
+            <h2>4. Uso Aceitável</h2>
+            <p>
+                Você concorda em não usar o Site para:
+            </p>
+            <ul>
+                <li>Publicar ou transmitir conteúdo ilegal, obsceno ou ofensivo</li>
+                <li>Assediar, ameaçar ou prejudicar qualquer pessoa</li>
+                <li>Infringir direitos de propriedade intelectual</li>
+                <li>Introduzir vírus ou código malicioso</li>
+                <li>Falsificar cabeçalhos ou manipular identificadores para ocultar origem de conteúdo</li>
+                <li>Enviar spam ou mensagens não solicitadas</li>
+                <li>Coletar ou rastrear informações pessoais de terceiros</li>
+            </ul>
+        </div>
+
+        <!-- Intellectual Property -->
+        <div class="legal-section">
+            <h2>5. Propriedade Intelectual</h2>
+            <p>
+                O Site e seu conteúdo (incluindo textos, imagens, logos, designs) são propriedade da CoopVale 
+                ou de seus fornecedores de conteúdo e são protegidos por leis de copyright e propriedade intelectual.
+            </p>
+            <p>
+                Você não pode reproduzir, modificar, distribuir ou transmitir qualquer conteúdo do Site sem 
+                consentimento escrito prévio da CoopVale.
+            </p>
+        </div>
+
+        <!-- Products and Prices -->
+        <div class="legal-section">
+            <h2>6. Produtos e Preços</h2>
+            <h3>Disponibilidade</h3>
+            <p>
+                Todos os produtos listados no Site estão sujeitos à disponibilidade. A CoopVale se reserva o direito 
+                de limitar as quantidades de produtos ou cancelar pedidos.
+            </p>
+
+            <h3>Preços</h3>
+            <p>
+                Os preços estão sujeitos a alterações sem aviso prévio. Apesar de se esforçar para manter preços precisos, 
+                a CoopVale não é responsável por erros tipográficos ou de preço.
+            </p>
+
+            <h3>Descrições de Produtos</h3>
+            <p>
+                A CoopVale tenta descrever com precisão todos os produtos. No entanto, não garantimos que as descrições, 
+                imagens ou informações de preço são precisas, completas, confiáveis ou sem erros.
+            </p>
+        </div>
+
+        <!-- Orders and Payment -->
+        <div class="legal-section">
+            <h2>7. Pedidos e Pagamento</h2>
+            <h3>Colocação de Pedidos</h3>
+            <p>
+                Ao colocar um pedido, você faz uma oferta para comprar produtos. A CoopVale tem o direito de aceitar 
+                ou rejeitar qualquer pedido.
+            </p>
+
+            <h3>Métodos de Pagamento</h3>
+            <p>
+                A CoopVale aceita vários métodos de pagamento. Você garante que possui o direito legal de usar qualquer 
+                método de pagamento fornecido e que as informações estão precisas.
+            </p>
+
+            <h3>Segurança do Pagamento</h3>
+            <p>
+                Todos os pagamentos são processados através de provedores de pagamento seguro. A CoopVale não armazena 
+                informações completas de cartão de crédito em seus servidores.
+            </p>
+        </div>
+
+        <!-- Shipping and Delivery -->
+        <div class="legal-section">
+            <h2>8. Envio e Entrega</h2>
+            <p>
+                Os prazos de entrega são estimativos e não garantidos. A CoopVale não é responsável por atrasos 
+                causados por fornecedores de transporte ou fatores fora de nosso controle.
+            </p>
+            <p>
+                Os riscos de perda ou dano aos produtos passam para você quando o produto é entregue ao fornecedor 
+                de envio, a menos que você tenha escolhido cobertura de seguro de envio.
+            </p>
+        </div>
+
+        <!-- Limitation of Liability -->
+        <div class="legal-section">
+            <h2>9. Limitação de Responsabilidade</h2>
+            <div class="highlight">
+                <strong>⚠️ Aviso Legal:</strong> Na máxima extensão permitida por lei, a CoopVale não será responsável 
+                por qualquer dano indireto, incidental, especial, conseqüente ou punitivo resultante de seu uso ou 
+                incapacidade de usar o Site.
+            </div>
+        </div>
+
+        <!-- Disclaimer -->
+        <div class="legal-section">
+            <h2>10. Isenção de Responsabilidade</h2>
+            <p>
+                O Site é fornecido "no estado em que se encontra" e "conforme disponível". A CoopVale faz isenção 
+                de todas as garantias, expressas ou implícitas, incluindo, mas não limitado a, garantias de comercialização, 
+                adequação para um fim específico e não infração.
+            </p>
+        </div>
+
+        <!-- Termination -->
+        <div class="legal-section">
+            <h2>11. Rescisão</h2>
+            <p>
+                A CoopVale pode rescindir sua conta e acesso ao Site imediatamente, sem aviso prévio, se você violar 
+                estes Termos de Uso.
+            </p>
+        </div>
+
+        <!-- Governing Law -->
+        <div class="legal-section">
+            <h2>12. Lei Aplicável</h2>
+            <p>
+                Estes Termos de Uso serão regidos e interpretados de acordo com as leis da República Federativa do Brasil, 
+                sem considerar seus conflitos de disposições de lei. Você consente irrevogavelmente na jurisdição exclusiva 
+                dos tribunais localizados em São Paulo.
+            </p>
+        </div>
+
+        <!-- Contact -->
+        <div class="legal-section">
+            <h2>13. Contato</h2>
+            <p>
+                Se você tiver dúvidas sobre estes Termos de Uso, entre em contato conosco:
+            </p>
+            <div class="highlight">
+                <strong>Email:</strong> contato@coopvale.com<br>
+                <strong>Telefone:</strong> (11) 3333-4444<br>
+                <strong>Endereço:</strong> Rua das Flores, 123, Bairro do Vale, São Paulo, SP 01234-567
+            </div>
+        </div>
+    </div>
+
+    <div class="back-link">
+        <a href="/">
+            <i class="bi bi-arrow-left"></i> Voltar ao Início
+        </a>
+    </div>
+</div>
+
+{% endblock %}

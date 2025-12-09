@@ -1,0 +1,492 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+<style>
+    /* Hero Section */
+    .hero-section {
+        background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        color: white;
+        padding: 100px 0;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" fill-opacity="1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,149.3C960,160,1056,160,1152,154.7C1248,149,1344,139,1392,133.3L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+        background-size: cover;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .hero-section h1 {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .hero-section p {
+        font-size: 1.3rem;
+        margin-bottom: 30px;
+        opacity: 0.95;
+    }
+
+    .hero-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-hero {
+        padding: 12px 30px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-hero-primary {
+        background-color: white;
+        color: #2ecc71;
+        border: none;
+    }
+
+    .btn-hero-primary:hover {
+        background-color: #f0f0f0;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    .btn-hero-secondary {
+        background-color: transparent;
+        color: white;
+        border: 2px solid white;
+    }
+
+    .btn-hero-secondary:hover {
+        background-color: white;
+        color: #2ecc71;
+        transform: translateY(-2px);
+    }
+
+    /* Featured Section */
+    .featured-section {
+        padding: 80px 0;
+        background-color: #f8f9fa;
+    }
+
+    .section-title {
+        text-align: center;
+        margin-bottom: 50px;
+        position: relative;
+    }
+
+    .section-title h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #27ae60;
+        margin-bottom: 10px;
+    }
+
+    .section-title p {
+        font-size: 1.1rem;
+        color: #666;
+    }
+
+    .title-underline {
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(90deg, #2ecc71, #27ae60);
+        margin: 15px auto 0;
+        border-radius: 2px;
+    }
+
+    /* Cards */
+    .card-feature {
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        height: 100%;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    }
+
+    .card-feature:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(46, 204, 113, 0.2);
+    }
+
+    .card-feature-icon {
+        font-size: 3rem;
+        color: #2ecc71;
+        margin-bottom: 15px;
+    }
+
+    .card-feature h5 {
+        color: #27ae60;
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .card-feature p {
+        color: #666;
+        line-height: 1.6;
+    }
+
+    /* Statistics */
+    .stats-section {
+        background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        color: white;
+        padding: 60px 0;
+        margin-top: 60px;
+    }
+
+    .stat-item {
+        text-align: center;
+        padding: 20px;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .stat-label {
+        font-size: 1.1rem;
+        opacity: 0.95;
+    }
+
+    /* Produtores Section */
+    .produtores-section {
+        padding: 80px 0;
+    }
+
+    .produtor-card {
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        text-align: center;
+        border: none;
+    }
+
+    .produtor-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 40px rgba(46, 204, 113, 0.25);
+    }
+
+    .produtor-card img {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+    }
+
+    .produtor-info {
+        padding: 25px;
+    }
+
+    .produtor-info h5 {
+        color: #27ae60;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .produtor-info p {
+        color: #666;
+        font-size: 0.95rem;
+        margin-bottom: 0;
+    }
+
+    /* CTA Section */
+    .cta-section {
+        background: linear-gradient(135deg, #27ae60 0%, #1e8449 100%);
+        color: white;
+        padding: 60px 0;
+        text-align: center;
+        margin: 60px 0 0 0;
+    }
+
+    .cta-section h2 {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        font-weight: 700;
+    }
+
+    .cta-section p {
+        font-size: 1.2rem;
+        margin-bottom: 30px;
+        opacity: 0.95;
+    }
+
+    .btn-cta {
+        padding: 15px 40px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 50px;
+        background-color: white;
+        color: #27ae60;
+        border: none;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-cta:hover {
+        background-color: #f0f0f0;
+        transform: translateY(-2px);
+        color: #27ae60;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    /* About Section */
+    .about-preview {
+        padding: 80px 0;
+        background-color: #f8f9fa;
+    }
+
+    .about-content {
+        display: flex;
+        align-items: center;
+        gap: 40px;
+    }
+
+    .about-text h2 {
+        color: #27ae60;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+
+    .about-text p {
+        color: #666;
+        font-size: 1.1rem;
+        line-height: 1.8;
+        margin-bottom: 20px;
+    }
+
+    .about-text .btn {
+        margin-top: 20px;
+    }
+
+    .about-image {
+        text-align: center;
+    }
+
+    .about-image img {
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .hero-section h1 {
+            font-size: 2rem;
+        }
+
+        .hero-section p {
+            font-size: 1rem;
+        }
+
+        .section-title h2 {
+            font-size: 1.8rem;
+        }
+
+        .about-content {
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .about-text h2 {
+            font-size: 1.8rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+        }
+    }
+</style>
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-content">
+        <div class="container">
+            <h1>Bem-vindo à CoopVale</h1>
+            <p>Produtos 100% orgânicos direto do produtor para sua mesa</p>
+            <div class="hero-buttons">
+                <a href="{{ url_for('produtos.listar_produtos') }}" class="btn btn-hero btn-hero-primary">
+                    <i class="bi bi-shop"></i> Ver Produtos
+                </a>
+                <a href="{{ url_for('institucional.sobre') }}" class="btn btn-hero btn-hero-secondary">
+                    <i class="bi bi-info-circle"></i> Saiba Mais
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="featured-section">
+    <div class="container">
+        <div class="section-title">
+            <h2>Por que escolher CoopVale?</h2>
+            <p>Qualidade, sustentabilidade e apoio ao pequeno produtor</p>
+            <div class="title-underline"></div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="card card-feature p-4">
+                    <div class="card-feature-icon">
+                        <i class="bi bi-leaf"></i>
+                    </div>
+                    <h5>100% Orgânico</h5>
+                    <p>Produtos sem agrotóxicos, frescos e sustentáveis direto de nossos produtores.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card card-feature p-4">
+                    <div class="card-feature-icon">
+                        <i class="bi bi-truck"></i>
+                    </div>
+                    <h5>Entrega Rápida</h5>
+                    <p>Receba seus produtos frescos em até 3 dias úteis com frete grátis em compras acima de R$ 100.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card card-feature p-4">
+                    <div class="card-feature-icon">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <h5>100% Seguro</h5>
+                    <p>Seus dados pessoais são protegidos com criptografia SSL de alta segurança.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card card-feature p-4">
+                    <div class="card-feature-icon">
+                        <i class="bi bi-hand-thumbs-up"></i>
+                    </div>
+                    <h5>Apoio Rural</h5>
+                    <p>Cada compra apoia diretamente pequenos produtores locais e suas famílias.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Statistics -->
+<section class="stats-section">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-4">
+                <div class="stat-item">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Produtores Cadastrados</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-item">
+                    <div class="stat-number">1000+</div>
+                    <div class="stat-label">Produtos Disponíveis</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-item">
+                    <div class="stat-number">5000+</div>
+                    <div class="stat-label">Clientes Satisfeitos</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Produtores em Destaque -->
+<section class="produtores-section">
+    <div class="container">
+        <div class="section-title">
+            <h2>Produtores em Destaque</h2>
+            <p>Conheça algumas de nossas histórias de sucesso</p>
+            <div class="title-underline"></div>
+        </div>
+
+        <div class="row g-4">
+            {% if produtores %}
+                {% for produtor in produtores %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card produtor-card">
+                        <img src="https://via.placeholder.com/400x250?text={{ produtor.nome }}" alt="{{ produtor.nome }}">
+                        <div class="produtor-info">
+                            <h5>{{ produtor.nome }}</h5>
+                            <p>{{ produtor.especialidade if produtor.especialidade else 'Produtor Local' }}</p>
+                            <a href="{{ url_for('produtor.ver_perfil') }}" class="btn btn-sm btn-success mt-3">
+                                Ver Perfil
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12">
+                    <div class="alert alert-info text-center">
+                        <p>Produtores em destaque em breve!</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="text-center mt-5">
+            <a href="{{ url_for('institucional.produtores') }}" class="btn btn-success btn-lg">
+                <i class="bi bi-people"></i> Conheça Todos os Produtores
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- About Preview -->
+<section class="about-preview">
+    <div class="container">
+        <div class="about-content">
+            <div class="about-text col-lg-6">
+                <h2>Sobre a CoopVale</h2>
+                <p>A CoopVale é uma cooperativa de produtores rurais comprometida com a sustentabilidade, qualidade e valorização do trabalho no campo.</p>
+                <p>Desde sua fundação, conectamos pequenos produtores com consumidores que valorizam produtos frescos, saudáveis e produzidos com responsabilidade ambiental.</p>
+                <a href="{{ url_for('institucional.sobre') }}" class="btn btn-success btn-lg">
+                    <i class="bi bi-arrow-right"></i> Conheça Nossa História
+                </a>
+            </div>
+            <div class="col-lg-6">
+                <img src="https://via.placeholder.com/500x400?text=CoopVale" alt="CoopVale" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+    <div class="container">
+        <h2>Pronto para começar?</h2>
+        <p>Faça seu cadastro e acesse milhares de produtos frescos e orgânicos</p>
+        <a href="{{ url_for('auth.registro') }}" class="btn-cta">
+            <i class="bi bi-person-plus"></i> Criar Conta Agora
+        </a>
+    </div>
+</section>
+
+{% endblock %}
