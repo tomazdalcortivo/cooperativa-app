@@ -76,7 +76,7 @@ class Avaliacao(db.Model):
     pedido_item_id = db.Column(db.Integer, db.ForeignKey('pedidos_itens.id'), nullable=False, unique=True)
 
     produto = db.relationship('Produto', backref='avaliacoes')
-    pedido_item = db.relationship('ItemPedido', backref='avaliacao', uselist=False)
+    pedido_item = db.relationship('ItemPedido', backref=db.backref('avaliacao', uselist=False))
 
 class Produto(db.Model):
     __tablename__ = 'produto'  # Adicione isso para consistência

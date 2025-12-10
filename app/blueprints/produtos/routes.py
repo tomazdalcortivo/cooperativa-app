@@ -191,17 +191,20 @@ def detalhe_produto(id):
     item_id_para_avaliar = None
     
     if current_user.is_authenticated and current_user.tipo_usuario == 'cliente':
-        from app.models.models import ItemPedido, Pedido
+        from app.models.models import ItemPedido, Pedido, Avaliacao
         
-        item = ItemPedido.query.join(Pedido).filter(
+        # Buscar TODOS os itens do cliente para este produto que já foram entregues
+        itens = ItemPedido.query.join(Pedido).filter(
             Pedido.cliente_id == current_user.cliente.id,
             ItemPedido.produto_id == produto.id,
-            Pedido.status == 'Entregue',
-            ItemPedido.avaliacao == None
-        ).first()
+            Pedido.status == 'Entregue'
+        ).all()
         
-        if item:
-            item_id_para_avaliar = item.id
+        # Encontrar o primeiro item que NÃO foi avaliado
+        for item in itens:
+            if not item.foi_avaliado:  # Usa a @property que checa se avaliacao is not None
+                item_id_para_avaliar = item.id
+                break
     
     return render_template("produtos/detalhe.html", 
                           p=produto, 

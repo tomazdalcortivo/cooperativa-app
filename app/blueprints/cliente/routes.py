@@ -111,26 +111,35 @@ def lista_favoritos():
 @cliente_bp.route("/avaliar/<int:item_id>", methods=['GET', 'POST'])
 @login_required
 def avaliar_produto(item_id):
+    """Rota para avaliar um produto comprado"""
+    
+    # Validar tipo de usuário
     if current_user.tipo_usuario != 'cliente':
         flash("Acesso restrito a clientes.", "danger")
         return redirect(url_for('index'))
 
+    # Buscar o item do pedido
     item = ItemPedido.query.get_or_404(item_id)
-    form = AvaliacaoForm() 
-
+    
+    # Validar se o pedido foi entregue
     if item.pedido.status != 'Entregue':
         flash("Você só pode avaliar itens de pedidos já entregues.", "danger")
         return redirect(url_for('pedidos.meus_pedidos'))
 
+    # Validar se o item pertence ao cliente autenticado
     if item.pedido.cliente_id != current_user.cliente.id:
         flash("Acesso negado: Este item não pertence a um de seus pedidos.", "danger")
         return redirect(url_for('pedidos.meus_pedidos'))
 
+    # Validar se o item já foi avaliado
     if item.foi_avaliado:
         flash(f"O produto '{item.produto.nome}' já foi avaliado neste pedido.", "warning")
-        return redirect(url_for('pedidos.meus_pedidos'))
+        return redirect(url_for('produtos.detalhe_produto', id=item.produto_id))
+
+    form = AvaliacaoForm() 
 
     if form.validate_on_submit():
+        # Criar nova avaliação
         nova_avaliacao = Avaliacao(
             nota=form.nota.data,
             comentario=form.comentario.data if form.comentario.data else None,
@@ -140,7 +149,6 @@ def avaliar_produto(item_id):
         
         try:
             db.session.add(nova_avaliacao)
-            item.foi_avaliado = True 
             db.session.commit()
             flash(f"Avaliação para o produto '{item.produto.nome}' enviada com sucesso!", "success")
             return redirect(url_for('produtos.detalhe_produto', id=item.produto_id))
@@ -148,5 +156,6 @@ def avaliar_produto(item_id):
         except Exception as e:
             db.session.rollback()
             flash(f"Erro ao salvar avaliação: {str(e)}", "danger")
+            return redirect(url_for('produtos.detalhe_produto', id=item.produto_id))
 
     return render_template("cliente/avaliar_produto.html", item=item, form=form)
