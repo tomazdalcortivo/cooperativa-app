@@ -32,7 +32,7 @@
         font-size: 3.5rem;
         font-weight: 700;
         margin-bottom: 20px;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
     }
 
     .hero-section p {
@@ -65,7 +65,8 @@
     .btn-hero-primary:hover {
         background-color: #f0f0f0;
         transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        color: #000;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     }
 
     .btn-hero-secondary {
@@ -119,7 +120,7 @@
         overflow: hidden;
         transition: all 0.3s ease;
         height: 100%;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
     }
 
     .card-feature:hover {
@@ -176,7 +177,7 @@
     .produtor-card {
         border-radius: 15px;
         overflow: hidden;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         transition: all 0.3s ease;
         text-align: center;
         border: none;
@@ -247,7 +248,7 @@
         background-color: #f0f0f0;
         transform: translateY(-2px);
         color: #27ae60;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     }
 
     /* About Section */
@@ -286,9 +287,19 @@
 
     .about-image img {
         border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         max-width: 100%;
         height: auto;
+    }
+
+    .placeholder-image {
+        width: 400px;
+        height: 250px;
+        background: #e6e6e6;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 20px;
+        color: #333;
     }
 
     /* Responsive */
@@ -351,7 +362,7 @@
             <div class="col-md-6 col-lg-3">
                 <div class="card card-feature p-4">
                     <div class="card-feature-icon">
-                        <i class="bi bi-leaf"></i>
+                        <i class="bi bi-tree"></i>
                     </div>
                     <h5>100% Orgânico</h5>
                     <p>Produtos sem agrotóxicos, frescos e sustentáveis direto de nossos produtores.</p>
@@ -428,26 +439,29 @@
 
         <div class="row g-4">
             {% if produtores %}
-                {% for produtor in produtores %}
-                <div class="col-md-6 col-lg-4">
-                    <div class="card produtor-card">
-                        <img src="https://via.placeholder.com/400x250?text={{ produtor.nome }}" alt="{{ produtor.nome }}">
-                        <div class="produtor-info">
-                            <h5>{{ produtor.nome }}</h5>
-                            <p>{{ produtor.especialidade if produtor.especialidade else 'Produtor Local' }}</p>
-                            <a href="{{ url_for('produtor.ver_perfil') }}" class="btn btn-sm btn-success mt-3">
-                                Ver Perfil
-                            </a>
-                        </div>
+            {% for produtor in produtores %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card produtor-card">
+                    <div class="placeholder-image d-flex align-items-center justify-content-center">
+                        <span>{{ produtor.nome }}</span>
+                    </div>
+
+                    <div class="produtor-info">
+                        <h5>{{ produtor.nome }}</h5>
+                        <p>{{ produtor.especialidade if produtor.especialidade else 'Produtor Local' }}</p>
+                        <a href="{{ url_for('produtor.ver_perfil') }}" class="btn btn-sm btn-success mt-3">
+                            Ver Perfil
+                        </a>
                     </div>
                 </div>
-                {% endfor %}
+            </div>
+            {% endfor %}
             {% else %}
-                <div class="col-12">
-                    <div class="alert alert-info text-center">
-                        <p>Produtores em destaque em breve!</p>
-                    </div>
+            <div class="col-12">
+                <div class="alert alert-info text-center">
+                    <p>Produtores em destaque em breve!</p>
                 </div>
+            </div>
             {% endif %}
         </div>
 
@@ -463,16 +477,15 @@
 <section class="about-preview">
     <div class="container">
         <div class="about-content">
-            <div class="about-text col-lg-6">
+            <div class="about-text col-lg-12">
                 <h2>Sobre a CoopVale</h2>
-                <p>A CoopVale é uma cooperativa de produtores rurais comprometida com a sustentabilidade, qualidade e valorização do trabalho no campo.</p>
-                <p>Desde sua fundação, conectamos pequenos produtores com consumidores que valorizam produtos frescos, saudáveis e produzidos com responsabilidade ambiental.</p>
+                <p>A CoopVale é uma cooperativa de produtores rurais comprometida com a sustentabilidade, qualidade e
+                    valorização do trabalho no campo.</p>
+                <p>Desde sua fundação, conectamos pequenos produtores com consumidores que valorizam produtos frescos,
+                    saudáveis e produzidos com responsabilidade ambiental.</p>
                 <a href="{{ url_for('institucional.sobre') }}" class="btn btn-success btn-lg">
                     <i class="bi bi-arrow-right"></i> Conheça Nossa História
                 </a>
-            </div>
-            <div class="col-lg-6">
-                <img src="https://via.placeholder.com/500x400?text=CoopVale" alt="CoopVale" class="img-fluid">
             </div>
         </div>
     </div>

@@ -27,7 +27,7 @@ def blog():
             'id': 1,
             'titulo': 'Como escolher frutas e verduras frescas',
             'categoria': 'Dicas',
-            'data': '2025-01-15',
+            'data': '15/01/2025',
             'imagem': 'https://via.placeholder.com/400x250?text=Frutas+Frescas',
             'resumo': 'Aprenda a identificar alimentos frescos e de qualidade no mercado.',
             'conteudo': 'Texto completo do artigo...'
@@ -36,7 +36,7 @@ def blog():
             'id': 2,
             'titulo': 'Receita: Suco natural de abóbora e gengibre',
             'categoria': 'Receita',
-            'data': '2025-01-10',
+            'data': '10/01/2025',
             'imagem': 'https://via.placeholder.com/400x250?text=Suco+Natural',
             'resumo': 'Uma receita deliciosa e saudável para toda a família.',
             'conteudo': 'Texto completo do artigo...'
@@ -45,7 +45,7 @@ def blog():
             'id': 3,
             'titulo': 'Benefícios dos alimentos orgânicos para a saúde',
             'categoria': 'Saúde',
-            'data': '2025-01-05',
+            'data': '05/01/2025',
             'imagem': 'https://via.placeholder.com/400x250?text=Organicos',
             'resumo': 'Descubra os benefícios de consumir alimentos 100% orgânicos.',
             'conteudo': 'Texto completo do artigo...'
@@ -54,7 +54,7 @@ def blog():
             'id': 4,
             'titulo': 'Conservação de alimentos: técnicas ancestrais',
             'categoria': 'Dicas',
-            'data': '2024-12-28',
+            'data': '28/12/2024',
             'imagem': 'https://via.placeholder.com/400x250?text=Conservacao',
             'resumo': 'Técnicas antigas e modernas para conservar seus alimentos.',
             'conteudo': 'Texto completo do artigo...'
@@ -63,7 +63,7 @@ def blog():
             'id': 5,
             'titulo': 'Receita: Pão integral com sementes',
             'categoria': 'Receita',
-            'data': '2024-12-20',
+            'data': '20/12/2024',
             'imagem': 'https://via.placeholder.com/400x250?text=Pao+Integral',
             'resumo': 'Como fazer um delicioso pão integral em casa.',
             'conteudo': 'Texto completo do artigo...'
@@ -72,7 +72,7 @@ def blog():
             'id': 6,
             'titulo': 'Sazonalidade: qual é a melhor época para cada alimento',
             'categoria': 'Educação',
-            'data': '2024-12-15',
+            'data': '15/12/2024',
             'imagem': 'https://via.placeholder.com/400x250?text=Sazonalidade',
             'resumo': 'Entenda quando cada alimento está na sua melhor forma.',
             'conteudo': 'Texto completo do artigo...'
@@ -89,7 +89,7 @@ def blog_detalhes(post_id):
         'id': post_id,
         'titulo': f'Post {post_id}',
         'categoria': 'Educação',
-        'data': '2025-01-15',
+        'data': '15/01/2025',
         'autor': 'Equipe CoopVale',
         'imagem': 'https://via.placeholder.com/800x400',
         'conteudo': 'Conteúdo completo do artigo aqui...'
